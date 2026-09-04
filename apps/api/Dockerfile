@@ -5,7 +5,7 @@
 # ── Base ──
 FROM node:20-alpine AS base
 WORKDIR /app
-COPY package.json ./
+COPY package.json tsconfig.base.json ./
 COPY apps/api/package.json ./apps/api/
 COPY packages/shared/package.json ./packages/shared/
 COPY prisma/ ./prisma/
@@ -24,7 +24,6 @@ FROM base AS build
 RUN npm install
 COPY packages/ ./packages/
 COPY apps/api/ ./apps/api/
-COPY tsconfig.base.json ./
 RUN npx prisma generate --schema=prisma/schema.prisma
 RUN cd apps/api && npx tsc
 

@@ -5,7 +5,7 @@
 # ── Base ──
 FROM node:20-alpine AS base
 WORKDIR /app
-COPY package.json ./
+COPY package.json tsconfig.base.json ./
 COPY apps/web/package.json ./apps/web/
 COPY packages/shared/package.json ./packages/shared/
 
@@ -22,7 +22,6 @@ FROM base AS build
 RUN npm install
 COPY packages/ ./packages/
 COPY apps/web/ ./apps/web/
-COPY tsconfig.base.json ./
 ARG VITE_API_URL=http://localhost:3001
 ENV VITE_API_URL=${VITE_API_URL}
 RUN cd apps/web && npm run build

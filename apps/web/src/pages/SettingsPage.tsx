@@ -119,7 +119,7 @@ export function SettingsPage() {
             />
             <div className="flex justify-between text-xs text-gray-500 mt-2">
               <span>Show Everything (0)</span>
-              <span>Only Important (>25)</span>
+              <span>Only Important (&gt;25)</span>
               <span>Only Critical (50)</span>
             </div>
           </div>
