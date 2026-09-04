@@ -25,12 +25,12 @@ export class StocksService {
       where: { id: { in: stockIds } },
     });
 
-    const symbols = stocks.map((s) => s.symbol);
+    const symbols = stocks.map((s: any) => s.symbol);
     const quotes = await marketService.getQuotes(symbols);
 
     // Map quotes back to stock IDs for the client
-    return quotes.map((quote) => {
-      const stock = stocks.find((s) => s.symbol === quote.symbol);
+    return quotes.map((quote: any) => {
+      const stock = stocks.find((s: any) => s.symbol === quote.symbol);
       return {
         ...quote,
         stockId: stock?.id,

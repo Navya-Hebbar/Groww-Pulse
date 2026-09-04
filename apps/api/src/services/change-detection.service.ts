@@ -1,10 +1,7 @@
-import { AttentionLevel, FreshnessState, Quote, API_CONFIG } from '@groww-pulse/shared';
+import { AttentionLevel, Quote, ATTENTION_WEIGHTS, ATTENTION_LEVELS } from '@groww-pulse/shared';
 import { prisma } from '../db.js';
 
 export class ChangeDetectionService {
-  /**
-   * Evaluates meaningful changes for a specific user and stock.
-   */
   async evaluateChanges(
     userId: string,
     stockId: string,
@@ -12,61 +9,53 @@ export class ChangeDetectionService {
     preferences: any,
     goalAllocations: { stockId: string; allocationPercentage: number; goalId: string }[]
   ) {
-    // 1. Fetch user's last seen state for this stock
     const lastSeenState = await prisma.userStockState.findUnique({
       where: { userId_stockId: { userId, stockId } },
     });
 
-    // Determine baseline (either last seen or yesterday's close if never seen)
     const baselinePrice = lastSeenState?.lastSeenPrice ?? currentQuote.previousClose;
     const baselineVolume = lastSeenState?.lastSeenVolume ?? 1000000;
 
     const changes = [];
     let totalScore = 0;
 
-    // 2. Price Movement Detection
     if (preferences.priceMovementEnabled) {
-      const priceDiff = currentQuote.currentPrice - baselinePrice;
+      const priceDiff = currentQuote.price - baselinePrice;
       const priceChangePercent = Math.abs((priceDiff / baselinePrice) * 100);
       
-      if (priceChangePercent >= API_CONFIG.thresholds.price) {
+      if (priceChangePercent >= ATTENTION_WEIGHTS.priceMovement.thresholds.moderate) {
         changes.push({
           type: priceDiff > 0 ? 'PRICE_SPIKE' : 'PRICE_DROP',
           title: `Price moved by ${priceChangePercent.toFixed(2)}%`,
-          description: `Since you last checked, the price changed from ₹${baselinePrice} to ₹${currentQuote.currentPrice}.`,
-          impactScore: API_CONFIG.weights.price,
+          description: `Since you last checked, the price changed from ₹${baselinePrice} to ₹${currentQuote.price}.`,
+          impactScore: ATTENTION_WEIGHTS.priceMovement.maxPoints,
         });
-        totalScore += API_CONFIG.weights.price;
+        totalScore += ATTENTION_WEIGHTS.priceMovement.maxPoints;
       }
     }
 
-    // 3. Volume Anomaly Detection
-    if (preferences.volumeAnomalyEnabled && currentQuote.volume > baselineVolume * API_CONFIG.thresholds.volumeMultiplier) {
+    if (preferences.volumeAnomalyEnabled && currentQuote.volume > baselineVolume * ATTENTION_WEIGHTS.volumeAnomaly.thresholds.elevated) {
       changes.push({
         type: 'VOLUME_ANOMALY',
         title: 'Unusually high trading volume',
         description: `Trading volume is significantly higher than usual.`,
-        impactScore: API_CONFIG.weights.volume,
+        impactScore: ATTENTION_WEIGHTS.volumeAnomaly.maxPoints,
       });
-      totalScore += API_CONFIG.weights.volume;
+      totalScore += ATTENTION_WEIGHTS.volumeAnomaly.maxPoints;
     }
 
-    // 4. Goal Relevance Boost
     const relatedGoals = goalAllocations.filter(g => g.stockId === stockId);
     if (relatedGoals.length > 0) {
-      const maxAllocation = Math.max(...relatedGoals.map(g => g.allocationPercentage));
-      const goalBoost = maxAllocation * API_CONFIG.weights.goalRelevance;
-      totalScore += goalBoost;
+      totalScore += ATTENTION_WEIGHTS.personalRelevance.maxPoints;
     }
 
-    // Determine attention level
-    let attentionLevel: AttentionLevel = 'NORMAL';
-    if (totalScore >= API_CONFIG.attentionThresholds.critical) {
-      attentionLevel = 'CRITICAL';
-    } else if (totalScore >= API_CONFIG.attentionThresholds.high) {
-      attentionLevel = 'HIGH';
-    } else if (totalScore >= API_CONFIG.attentionThresholds.watching) {
-      attentionLevel = 'WATCHING';
+    let attentionLevel: AttentionLevel = AttentionLevel.NORMAL;
+    if (totalScore >= ATTENTION_LEVELS.CRITICAL.min) {
+      attentionLevel = AttentionLevel.CRITICAL;
+    } else if (totalScore >= ATTENTION_LEVELS.HIGH.min) {
+      attentionLevel = AttentionLevel.HIGH;
+    } else if (totalScore >= ATTENTION_LEVELS.WORTH_WATCHING.min) {
+      attentionLevel = AttentionLevel.WORTH_WATCHING;
     }
 
     return {
@@ -75,9 +64,9 @@ export class ChangeDetectionService {
       attentionLevel,
       attentionScore: Number(totalScore.toFixed(2)),
       changes,
-      freshness: currentQuote.freshness,
+      freshness: 'FRESH',
       lastSeenAt: lastSeenState?.lastSeenAt ?? null,
-      currentPrice: currentQuote.currentPrice,
+      currentPrice: currentQuote.price,
     };
   }
 }

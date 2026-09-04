@@ -1,4 +1,4 @@
-import { Queue, Worker, QueueScheduler } from 'bullmq';
+import { Queue, Worker } from 'bullmq';
 import Redis from 'ioredis';
 import { prisma } from '../db.js';
 import { marketService } from '../services/market.service.js';
@@ -35,7 +35,7 @@ export const marketWorker = new Worker(
     
     // Fetch all unique stocks in the system
     const stocks = await prisma.stock.findMany({ select: { symbol: true } });
-    const symbols = stocks.map(s => s.symbol);
+    const symbols = stocks.map((s: any) => s.symbol);
     
     if (symbols.length > 0) {
       console.log(`[Worker] Refreshing quotes for ${symbols.length} stocks...`);

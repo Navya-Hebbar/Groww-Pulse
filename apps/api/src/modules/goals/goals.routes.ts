@@ -28,7 +28,7 @@ goalsRouter.post('/', validate(createGoalSchema), async (req: AuthRequest, res: 
 
 goalsRouter.delete('/:id', async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
-    await goalsService.deleteGoal(req.userId!, req.params.id);
+    await goalsService.deleteGoal(req.userId!, req.params.id as string);
     res.json({ success: true, data: { message: 'Goal deleted' } });
   } catch (error) {
     next(error);
@@ -37,7 +37,7 @@ goalsRouter.delete('/:id', async (req: AuthRequest, res: Response, next: NextFun
 
 goalsRouter.post('/:id/stocks', validate(addGoalStockSchema), async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
-    await goalsService.addStockToGoal(req.userId!, req.params.id, req.body);
+    await goalsService.addStockToGoal(req.userId!, req.params.id as string, req.body);
     res.json({ success: true, data: { message: 'Stock allocated to goal' } });
   } catch (error) {
     next(error);
@@ -46,7 +46,7 @@ goalsRouter.post('/:id/stocks', validate(addGoalStockSchema), async (req: AuthRe
 
 goalsRouter.delete('/:id/stocks/:stockId', async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
-    await goalsService.removeStockFromGoal(req.userId!, req.params.id, req.params.stockId);
+    await goalsService.removeStockFromGoal(req.userId!, req.params.id as string, req.params.stockId as string);
     res.json({ success: true, data: { message: 'Stock removed from goal' } });
   } catch (error) {
     next(error);

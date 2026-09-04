@@ -1,5 +1,4 @@
 import { Quote } from '@groww-pulse/shared';
-import { prisma } from '../db.js';
 
 class MarketService {
   private basePrices: Record<string, number> = {
@@ -17,49 +16,33 @@ class MarketService {
     'HINDUNILVR': 2500,
   };
 
-  /**
-   * Fetches latest market quotes for a list of symbols.
-   * In a real app, this would call AlphaVantage, Yahoo Finance, or Groww APIs.
-   * For the hackathon, we simulate live data with random walk.
-   */
   async getQuotes(symbols: string[]): Promise<Quote[]> {
-    // Determine freshness state based on market hours
-    // Simplified for demo: assume market is open and data is fresh
     const now = new Date();
     
     return symbols.map((symbol) => {
       const basePrice = this.basePrices[symbol] || 1000;
-      
-      // Random walk: +/- 1.5%
       const changePercent = (Math.random() - 0.5) * 3; 
-      const currentPrice = basePrice * (1 + changePercent / 100);
+      const price = basePrice * (1 + changePercent / 100);
       const previousClose = basePrice;
-      const change = currentPrice - previousClose;
-      
-      // Simulate volume anomaly for random stocks (10% chance)
-      const isVolumeAnomaly = Math.random() > 0.9;
-      const volume = isVolumeAnomaly ? 5000000 : 1000000;
+      const volume = Math.random() > 0.9 ? 5000000 : 1000000;
 
       return {
         symbol,
-        currentPrice: Number(currentPrice.toFixed(2)),
-        change: Number(change.toFixed(2)),
-        changePercent: Number(changePercent.toFixed(2)),
+        price: Number(price.toFixed(2)),
         volume,
+        dayHigh: Number((price * 1.01).toFixed(2)),
+        dayLow: Number((price * 0.99).toFixed(2)),
+        week52High: Number((price * 1.2).toFixed(2)),
+        week52Low: Number((price * 0.8).toFixed(2)),
         previousClose,
-        high: Number((currentPrice * 1.01).toFixed(2)),
-        low: Number((currentPrice * 0.99).toFixed(2)),
-        lastUpdated: now,
-        freshness: 'FRESH',
+        open: previousClose,
+        timestamp: now,
+        source: 'mock',
       };
     });
   }
 
-  /**
-   * Fetches latest market events (news, corporate actions)
-   */
   async getEvents(symbols: string[]) {
-    // Mock events for demo purposes
     const mockEvents = [];
     
     if (symbols.includes('RELIANCE') && Math.random() > 0.7) {

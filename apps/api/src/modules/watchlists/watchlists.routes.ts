@@ -40,7 +40,7 @@ watchlistRouter.put(
   validate(updateWatchlistSchema),
   async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
-      const watchlist = await watchlistsService.updateWatchlist(req.userId!, req.params.id, req.body);
+      const watchlist = await watchlistsService.updateWatchlist(req.userId!, req.params.id as string, req.body);
       res.json({ success: true, data: watchlist });
     } catch (error) {
       next(error);
@@ -50,7 +50,7 @@ watchlistRouter.put(
 
 watchlistRouter.delete('/:id', async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
-    await watchlistsService.deleteWatchlist(req.userId!, req.params.id);
+    await watchlistsService.deleteWatchlist(req.userId!, req.params.id as string);
     res.json({ success: true, data: { message: 'Watchlist deleted' } });
   } catch (error) {
     next(error);
@@ -62,7 +62,7 @@ watchlistRouter.post(
   validate(addStockToWatchlistSchema),
   async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
-      await watchlistsService.addStock(req.userId!, req.params.id, req.body);
+      await watchlistsService.addStock(req.userId!, req.params.id as string, req.body);
       res.status(201).json({ success: true, data: { message: 'Stock added to watchlist' } });
     } catch (error) {
       next(error);
@@ -72,7 +72,7 @@ watchlistRouter.post(
 
 watchlistRouter.delete('/:id/stocks/:stockId', async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
-    await watchlistsService.removeStock(req.userId!, req.params.id, req.params.stockId);
+    await watchlistsService.removeStock(req.userId!, req.params.id as string, req.params.stockId as string);
     res.json({ success: true, data: { message: 'Stock removed from watchlist' } });
   } catch (error) {
     next(error);

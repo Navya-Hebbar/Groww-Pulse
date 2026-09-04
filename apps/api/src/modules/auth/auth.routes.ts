@@ -32,9 +32,12 @@ authRouter.post(
   }
 );
 
-authRouter.post('/logout', (req: Request, res: Response) => {
-  // Client is responsible for deleting the token
-  res.json({ success: true, data: { message: 'Logged out successfully' } });
+authRouter.post('/logout', authenticate, async (_req: Request, res: Response, next: NextFunction) => {
+  try {
+    res.json({ success: true, data: { message: 'Logged out successfully' } });
+  } catch (error) {
+    next(error);
+  }
 });
 
 authRouter.get(

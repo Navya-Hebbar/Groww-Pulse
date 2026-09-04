@@ -1,4 +1,4 @@
-import { Router, Request, Response, NextFunction } from 'express';
+import { Router, Response, NextFunction } from 'express';
 import { authenticate, AuthRequest } from '../../middleware/auth.js';
 import { statesService } from './states.service.js';
 
@@ -17,7 +17,7 @@ statesRouter.post('/:stockId', async (req: AuthRequest, res: Response, next: Nex
 
     const state = await statesService.updateUserState(
       req.userId!,
-      req.params.stockId,
+      req.params.stockId as string,
       currentPrice,
       currentVolume
     );

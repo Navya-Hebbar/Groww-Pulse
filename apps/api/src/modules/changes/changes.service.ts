@@ -24,8 +24,8 @@ export class ChangesService {
     const stockIds = new Set<string>();
     const stockMap = new Map<string, any>();
 
-    watchlists.forEach(wl => {
-      wl.stocks.forEach(ws => {
+    watchlists.forEach((wl: any) => {
+      wl.stocks.forEach((ws: any) => {
         stockIds.add(ws.stockId);
         stockMap.set(ws.stock.symbol, ws.stock);
       });
@@ -41,8 +41,8 @@ export class ChangesService {
       include: { stocks: true },
     });
 
-    const goalAllocations = goals.flatMap(g => 
-      g.stocks.map(s => ({ stockId: s.stockId, allocationPercentage: s.allocationPercentage, goalId: g.id }))
+    const goalAllocations = goals.flatMap((g: any) => 
+      g.stocks.map((s: any) => ({ stockId: s.stockId, allocationPercentage: s.allocationPercentage, goalId: g.id }))
     );
 
     // 4. Fetch live market quotes
