@@ -1,10 +1,12 @@
-import { ApiResponse } from '@groww-pulse/shared';
+import type { ApiResponse } from '@groww-pulse/shared';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
 export class ApiError extends Error {
-  constructor(public code: string, message: string) {
+  code: string;
+  constructor(code: string, message: string) {
     super(message);
+    this.code = code;
     this.name = 'ApiError';
   }
 }

@@ -16,7 +16,7 @@ const getAttentionBadge = (level: AttentionLevel) => {
       return <span className="badge-critical text-xs px-2 py-1 rounded font-medium flex items-center gap-1"><AlertTriangle size={12} /> CRITICAL</span>;
     case 'HIGH':
       return <span className="badge-high text-xs px-2 py-1 rounded font-medium">HIGH ATTENTION</span>;
-    case 'WATCHING':
+    case 'WORTH_WATCHING':
       return <span className="badge-watching text-xs px-2 py-1 rounded font-medium">WORTH WATCHING</span>;
     default:
       return <span className="badge-normal text-xs px-2 py-1 rounded font-medium">NORMAL</span>;
