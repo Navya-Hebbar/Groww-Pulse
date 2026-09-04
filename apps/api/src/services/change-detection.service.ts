@@ -1,5 +1,5 @@
 import { AttentionLevel, FreshnessState, Quote, API_CONFIG } from '@groww-pulse/shared';
-import { prisma } from '../../db.js';
+import { prisma } from '../db.js';
 
 export class ChangeDetectionService {
   /**
