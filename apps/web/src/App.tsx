@@ -1,32 +1,48 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './hooks/useAuth';
+import { LoginPage } from './pages/LoginPage';
+import { RegisterPage } from './pages/RegisterPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 30 * 1000, // 30 seconds
+      staleTime: 30 * 1000,
       retry: 2,
       refetchOnWindowFocus: true,
     },
   },
 });
 
-// Placeholder pages — will be replaced in later phases
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const { user, isLoading } = useAuth();
+  
+  if (isLoading) {
+    return <div className="min-h-screen bg-surface-900 flex items-center justify-center text-brand-500">Loading...</div>;
+  }
+  
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+  
+  return <>{children}</>;
+}
+
+// Placeholder Dashboard
 function DashboardPage() {
+  const { user, logout } = useAuth();
+  
   return (
     <div className="min-h-screen bg-surface-900 flex items-center justify-center">
-      <div className="text-center animate-fade-in">
-        <div className="text-5xl font-bold bg-gradient-to-r from-brand-400 to-brand-600 bg-clip-text text-transparent mb-4">
-          Groww Pulse
-        </div>
-        <p className="text-gray-400 text-lg mb-2">Know what changed. Know what matters.</p>
-        <p className="text-gray-600 text-sm">Phase 1 — Foundation complete ✓</p>
-        <div className="mt-8 flex gap-3 justify-center">
-          <span className="badge-normal text-xs px-3 py-1 rounded-full">Normal</span>
-          <span className="badge-watching text-xs px-3 py-1 rounded-full">Worth Watching</span>
-          <span className="badge-high text-xs px-3 py-1 rounded-full">High</span>
-          <span className="badge-critical text-xs px-3 py-1 rounded-full">Critical</span>
-        </div>
+      <div className="text-center animate-fade-in p-8 card max-w-lg w-full">
+        <div className="text-4xl font-bold text-white mb-2">Groww Pulse</div>
+        <p className="text-gray-400 mb-6">Welcome, {user?.email}</p>
+        
+        <p className="text-brand-400 mb-6 font-medium">✓ Phase 2 (Authentication) complete</p>
+        
+        <button onClick={logout} className="btn-secondary">
+          Sign out
+        </button>
       </div>
     </div>
   );
@@ -35,12 +51,16 @@ function DashboardPage() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<DashboardPage />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }
