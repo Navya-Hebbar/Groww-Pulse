@@ -18,7 +18,7 @@ export async function setupSchedules() {
     {},
     {
       repeat: {
-        pattern: '*/5 * * * *', // Every 5 minutes
+        every: 15000, // Every 15 seconds for DEMO purposes
       },
     }
   );
