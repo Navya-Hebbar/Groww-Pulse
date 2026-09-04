@@ -16,3 +16,17 @@ stockRouter.get('/search', async (req: Request, res: Response, next: NextFunctio
   }
 });
 
+stockRouter.post('/quotes', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { stockIds } = req.body;
+    if (!Array.isArray(stockIds)) {
+      res.status(400).json({ success: false, error: { code: 'INVALID_INPUT', message: 'stockIds must be an array' } });
+      return;
+    }
+    const quotes = await stocksService.getQuotesForStocks(stockIds);
+    res.json({ success: true, data: quotes });
+  } catch (error) {
+    next(error);
+  }
+});
+
