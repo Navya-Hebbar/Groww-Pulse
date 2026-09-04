@@ -1,0 +1,221 @@
+// ──────────────────────────────────────────────
+// Groww Pulse — Database Schema
+// ──────────────────────────────────────────────
+// 12 models with full referential integrity,
+// unique constraints, indexes, and cascade rules.
+// ──────────────────────────────────────────────
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ── User ──
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  watchlists   Watchlist[]
+  stockStates  UserStockState[]
+  events       UserEvent[]
+  goals        Goal[]
+  preferences  UserPreference?
+  alerts       Alert[]
+}
+
+// ── Stock ──
+
+model Stock {
+  id        String   @id @default(cuid())
+  symbol    String
+  name      String
+  exchange  String
+  sector    String   @default("")
+  currency  String   @default("INR")
+  createdAt DateTime @default(now())
+
+  watchlistStocks WatchlistStock[]
+  snapshots       MarketSnapshot[]
+  stockStates     UserStockState[]
+  changes         DetectedChange[]
+  events          UserEvent[]
+  goalStocks      GoalStock[]
+  alerts          Alert[]
+
+  @@unique([symbol, exchange])
+  @@index([symbol])
+}
+
+// ── Watchlist ──
+
+model Watchlist {
+  id        String   @id @default(cuid())
+  userId    String
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user   User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stocks WatchlistStock[]
+
+  @@index([userId])
+}
+
+// ── WatchlistStock (join table) ──
+
+model WatchlistStock {
+  watchlistId String
+  stockId     String
+  createdAt   DateTime @default(now())
+
+  watchlist Watchlist @relation(fields: [watchlistId], references: [id], onDelete: Cascade)
+  stock     Stock     @relation(fields: [stockId], references: [id], onDelete: Cascade)
+
+  @@id([watchlistId, stockId])
+  @@unique([watchlistId, stockId])
+}
+
+// ── MarketSnapshot ──
+
+model MarketSnapshot {
+  id         String   @id @default(cuid())
+  stockId    String
+  price      Float
+  volume     Float
+  dayHigh    Float
+  dayLow     Float
+  week52High Float
+  week52Low  Float
+  timestamp  DateTime
+  source     String
+
+  stock Stock @relation(fields: [stockId], references: [id], onDelete: Cascade)
+
+  @@index([stockId, timestamp])
+  @@index([stockId])
+}
+
+// ── UserStockState ──
+// The most important table: enables "since you last checked"
+
+model UserStockState {
+  userId        String
+  stockId       String
+  lastSeenAt    DateTime
+  lastSeenPrice Float
+  lastSeenVolume Float
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stock Stock @relation(fields: [stockId], references: [id], onDelete: Cascade)
+
+  @@id([userId, stockId])
+  @@unique([userId, stockId])
+}
+
+// ── DetectedChange ──
+
+model DetectedChange {
+  id         String   @id @default(cuid())
+  stockId    String
+  eventType  String   // PRICE_MOVE, VOLUME_ANOMALY, 52W_HIGH, etc.
+  severity   String   // LOW, MEDIUM, HIGH, CRITICAL
+  value      Float
+  metadata   Json     @default("{}")
+  detectedAt DateTime @default(now())
+
+  stock  Stock       @relation(fields: [stockId], references: [id], onDelete: Cascade)
+  events UserEvent[]
+
+  @@index([stockId, detectedAt])
+  @@index([stockId])
+}
+
+// ── UserEvent ──
+
+model UserEvent {
+  id             String   @id @default(cuid())
+  userId         String
+  stockId        String
+  changeId       String
+  attentionScore Int      @default(0)
+  isRead         Boolean  @default(false)
+  createdAt      DateTime @default(now())
+
+  user   User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stock  Stock          @relation(fields: [stockId], references: [id], onDelete: Cascade)
+  change DetectedChange @relation(fields: [changeId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead])
+  @@index([userId, stockId])
+}
+
+// ── Goal ──
+
+model Goal {
+  id           String    @id @default(cuid())
+  userId       String
+  name         String
+  targetAmount Float
+  targetDate   DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  user   User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stocks GoalStock[]
+
+  @@index([userId])
+}
+
+// ── GoalStock (join table) ──
+
+model GoalStock {
+  goalId               String
+  stockId              String
+  allocationPercentage Float @default(0)
+
+  goal  Goal  @relation(fields: [goalId], references: [id], onDelete: Cascade)
+  stock Stock @relation(fields: [stockId], references: [id], onDelete: Cascade)
+
+  @@id([goalId, stockId])
+  @@unique([goalId, stockId])
+}
+
+// ── UserPreference ──
+
+model UserPreference {
+  userId                String  @id
+  priceMovementEnabled  Boolean @default(true)
+  volumeAnomalyEnabled  Boolean @default(true)
+  corporateEventsEnabled Boolean @default(true)
+  week52EventsEnabled   Boolean @default(true)
+  newsEnabled           Boolean @default(true)
+  minimumAttentionScore Int     @default(0)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ── Alert ──
+
+model Alert {
+  id             String   @id @default(cuid())
+  userId         String
+  stockId        String
+  conditionType  String   // PRICE_ABOVE, PRICE_BELOW, PRICE_CHANGE_PERCENT, ATTENTION_SCORE_ABOVE
+  conditionValue Float
+  enabled        Boolean  @default(true)
+  createdAt      DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stock Stock @relation(fields: [stockId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([stockId])
+}
