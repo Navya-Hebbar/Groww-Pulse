@@ -21,6 +21,7 @@ import { goalsRouter } from './modules/goals/goals.routes.js';
 import { preferencesRouter } from './modules/preferences/preferences.routes.js';
 import { alertsRouter } from './modules/alerts/alerts.routes.js';
 import { healthRouter } from './modules/health/health.routes.js';
+import { statesRouter } from './modules/states/states.routes.js';
 
 const app = express();
 
@@ -54,6 +55,7 @@ app.use('/api', rateLimiter);
 app.use('/api/auth', authRouter);
 app.use('/api/watchlists', watchlistRouter);
 app.use('/api/stocks', stockRouter);
+app.use('/api/states', statesRouter);
 app.use('/api/dashboard', dashboardRouter);
 app.use('/api/changes', changesRouter);
 app.use('/api/goals', goalsRouter);
