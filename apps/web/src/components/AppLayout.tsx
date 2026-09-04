@@ -1,10 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { Activity, LayoutDashboard, List, Target, Settings, LogOut } from 'lucide-react';
+import { Activity, LayoutDashboard, List, Target, Settings, LogOut, Radio, Bot, Share2, Sparkles } from 'lucide-react';
 import { PulseTicker } from './PulseTicker';
+import { VoiceCopilotModal } from './VoiceCopilotModal';
+import { WarRoomModal } from './WarRoomModal';
+import { SocialShareModal } from './SocialShareModal';
 
-export function Navigation() {
+export function Navigation({
+  onOpenWarRoom,
+  onOpenVoice,
+}: {
+  onOpenWarRoom: () => void;
+  onOpenVoice: () => void;
+}) {
   const { logout } = useAuth();
   const location = useLocation();
 
@@ -44,6 +53,34 @@ export function Navigation() {
             </Link>
           );
         })}
+
+        {/* War Room Nav Button */}
+        <button
+          onClick={onOpenWarRoom}
+          className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl transition-all duration-200 text-red-400 hover:bg-red-500/10 border border-red-500/20 mt-4 group"
+        >
+          <div className="flex items-center gap-3">
+            <Radio size={18} className="animate-pulse text-red-400" />
+            <span className="font-bold text-sm text-white group-hover:text-red-300">War Room</span>
+          </div>
+          <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-red-500/20 text-red-400 border border-red-500/40 animate-pulse">
+            LIVE
+          </span>
+        </button>
+
+        {/* Voice AI Assistant Nav Button */}
+        <button
+          onClick={onOpenVoice}
+          className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl transition-all duration-200 text-cyan-400 hover:bg-cyan-500/10 border border-cyan-500/20 mt-2 group"
+        >
+          <div className="flex items-center gap-3">
+            <Bot size={18} className="text-cyan-400" />
+            <span className="font-bold text-sm text-white group-hover:text-cyan-300">Voice AI Copilot</span>
+          </div>
+          <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
+            PRO
+          </span>
+        </button>
       </div>
 
       <div className="pt-4 border-t border-white/10 mt-auto">
@@ -63,6 +100,10 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const { logout } = useAuth();
 
+  const [isVoiceOpen, setIsVoiceOpen] = useState(false);
+  const [isWarRoomOpen, setIsWarRoomOpen] = useState(false);
+  const [isShareOpen, setIsShareOpen] = useState(false);
+
   const navItems = [
     { path: '/', label: 'Pulse', icon: LayoutDashboard },
     { path: '/watchlists', label: 'Watchlists', icon: List },
@@ -78,7 +119,10 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
       {/* Desktop Sidebar */}
       <div className="z-30 w-64 fixed top-0 left-0 h-full hidden md:block">
-        <Navigation />
+        <Navigation
+          onOpenWarRoom={() => setIsWarRoomOpen(true)}
+          onOpenVoice={() => setIsVoiceOpen(true)}
+        />
       </div>
 
       {/* Main Content Viewport */}
@@ -91,6 +135,20 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           </div>
 
           <div className="flex items-center gap-1">
+            <button
+              onClick={() => setIsWarRoomOpen(true)}
+              className="p-2 rounded-lg text-xs font-bold text-red-400 bg-red-500/10"
+              title="War Room"
+            >
+              <Radio className="w-5 h-5 animate-pulse" />
+            </button>
+            <button
+              onClick={() => setIsVoiceOpen(true)}
+              className="p-2 rounded-lg text-xs font-bold text-cyan-400 bg-cyan-500/10"
+              title="Voice AI"
+            >
+              <Bot className="w-5 h-5" />
+            </button>
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = location.pathname === item.path;
@@ -118,7 +176,33 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
         {/* Main Content View Container */}
         <div className="flex-1 pb-16 md:pb-10">{children}</div>
+
+        {/* Floating Action Buttons (FAB) for Voice AI & Share */}
+        <div className="fixed bottom-6 right-6 z-40 flex items-center gap-3">
+          <button
+            onClick={() => setIsShareOpen(true)}
+            className="p-3.5 rounded-full bg-surface-850 hover:bg-surface-800 text-cyan-400 border border-cyan-500/30 shadow-[0_0_20px_rgba(0,0,0,0.5)] transition-all hover:scale-110"
+            title="Share Insights Card"
+          >
+            <Share2 size={20} />
+          </button>
+
+          <button
+            onClick={() => setIsVoiceOpen(true)}
+            className="flex items-center gap-2.5 px-4 py-3 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold text-xs shadow-[0_0_25px_rgba(0,229,255,0.4)] transition-all hover:scale-105 group"
+          >
+            <Bot size={18} className="animate-pulse" />
+            <span>Voice AI Copilot</span>
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+          </button>
+        </div>
+
+        {/* Modals */}
+        <VoiceCopilotModal isOpen={isVoiceOpen} onClose={() => setIsVoiceOpen(false)} />
+        <WarRoomModal isOpen={isWarRoomOpen} onClose={() => setIsWarRoomOpen(false)} />
+        <SocialShareModal isOpen={isShareOpen} onClose={() => setIsShareOpen(false)} />
       </main>
     </div>
   );
 }
+
