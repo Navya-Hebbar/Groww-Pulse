@@ -1,9 +1,11 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { BrowserRouter, Routes, Route, Navigate, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './hooks/useAuth';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { WatchlistsPage } from './pages/WatchlistsPage';
+import { DashboardPage } from './pages/DashboardPage';
+import { AppLayout } from './components/AppLayout';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -26,33 +28,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
     return <Navigate to="/login" replace />;
   }
   
-  return <>{children}</>;
-}
-
-// Placeholder Dashboard
-function DashboardPage() {
-  const { user, logout } = useAuth();
-  
-  return (
-    <div className="min-h-screen bg-surface-900 flex flex-col items-center justify-center gap-8">
-      <div className="text-center animate-fade-in p-8 card max-w-lg w-full">
-        <div className="text-4xl font-bold text-white mb-2">Groww Pulse</div>
-        <p className="text-gray-400 mb-6">Welcome, {user?.email}</p>
-        
-        <p className="text-brand-400 mb-2 font-medium">✓ Phase 2 (Authentication) complete</p>
-        <p className="text-brand-400 mb-6 font-medium">✓ Phase 3 (Watchlists) complete</p>
-        
-        <div className="flex gap-4 justify-center">
-          <Link to="/watchlists" className="btn-primary">
-            Manage Watchlists
-          </Link>
-          <button onClick={logout} className="btn-secondary">
-            Sign out
-          </button>
-        </div>
-      </div>
-    </div>
-  );
+  return <AppLayout>{children}</AppLayout>;
 }
 
 function App() {
@@ -63,8 +39,14 @@ function App() {
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
-            <Route path="/watchlists" element={<ProtectedRoute><WatchlistsPage /></ProtectedRoute>} />
+            
             <Route path="/" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+            <Route path="/watchlists" element={<ProtectedRoute><WatchlistsPage /></ProtectedRoute>} />
+            
+            {/* Stubs for future phases */}
+            <Route path="/goals" element={<ProtectedRoute><div className="p-8 text-white text-xl">Goals (Phase 11)</div></ProtectedRoute>} />
+            <Route path="/settings" element={<ProtectedRoute><div className="p-8 text-white text-xl">Settings (Phase 12)</div></ProtectedRoute>} />
+            
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </BrowserRouter>
