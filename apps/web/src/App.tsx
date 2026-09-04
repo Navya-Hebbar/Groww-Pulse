@@ -5,6 +5,7 @@ import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { WatchlistsPage } from './pages/WatchlistsPage';
 import { DashboardPage } from './pages/DashboardPage';
+import { GoalsPage } from './pages/GoalsPage';
 import { AppLayout } from './components/AppLayout';
 
 const queryClient = new QueryClient({
@@ -42,9 +43,9 @@ function App() {
             
             <Route path="/" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
             <Route path="/watchlists" element={<ProtectedRoute><WatchlistsPage /></ProtectedRoute>} />
+            <Route path="/goals" element={<ProtectedRoute><GoalsPage /></ProtectedRoute>} />
             
             {/* Stubs for future phases */}
-            <Route path="/goals" element={<ProtectedRoute><div className="p-8 text-white text-xl">Goals (Phase 11)</div></ProtectedRoute>} />
             <Route path="/settings" element={<ProtectedRoute><div className="p-8 text-white text-xl">Settings (Phase 12)</div></ProtectedRoute>} />
             
             <Route path="*" element={<Navigate to="/" replace />} />
