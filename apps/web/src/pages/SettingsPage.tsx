@@ -1,21 +1,23 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { fetchApi } from '../lib/api';
-import { Save, Settings2 } from 'lucide-react';
+import { Save, Settings2, Sparkles } from 'lucide-react';
 import { useState, useEffect } from 'react';
+
+const DEFAULT_PREFERENCES = {
+  priceMovementEnabled: true,
+  volumeAnomalyEnabled: true,
+  corporateEventsEnabled: true,
+  week52EventsEnabled: true,
+  newsEnabled: true,
+  minimumAttentionScore: 10,
+};
 
 export function SettingsPage() {
   const queryClient = useQueryClient();
-  
-  const [preferences, setPreferences] = useState({
-    priceMovementEnabled: true,
-    volumeAnomalyEnabled: true,
-    corporateEventsEnabled: true,
-    week52EventsEnabled: true,
-    newsEnabled: true,
-    minimumAttentionScore: 0,
-  });
 
-  const { data, isLoading } = useQuery({
+  const [preferences, setPreferences] = useState(DEFAULT_PREFERENCES);
+
+  const { data } = useQuery({
     queryKey: ['preferences'],
     queryFn: () => fetchApi<any>('/preferences'),
   });
@@ -23,12 +25,12 @@ export function SettingsPage() {
   useEffect(() => {
     if (data) {
       setPreferences({
-        priceMovementEnabled: data.priceMovementEnabled,
-        volumeAnomalyEnabled: data.volumeAnomalyEnabled,
-        corporateEventsEnabled: data.corporateEventsEnabled,
-        week52EventsEnabled: data.week52EventsEnabled,
-        newsEnabled: data.newsEnabled,
-        minimumAttentionScore: data.minimumAttentionScore,
+        priceMovementEnabled: data.priceMovementEnabled ?? true,
+        volumeAnomalyEnabled: data.volumeAnomalyEnabled ?? true,
+        corporateEventsEnabled: data.corporateEventsEnabled ?? true,
+        week52EventsEnabled: data.week52EventsEnabled ?? true,
+        newsEnabled: data.newsEnabled ?? true,
+        minimumAttentionScore: data.minimumAttentionScore ?? 10,
       });
     }
   }, [data]);
@@ -37,90 +39,108 @@ export function SettingsPage() {
     mutationFn: (newPrefs: any) => fetchApi('/preferences', { method: 'PUT', body: JSON.stringify(newPrefs) }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['preferences'] });
-      queryClient.invalidateQueries({ queryKey: ['dashboard-changes'] }); // Refresh dashboard with new rules
+      queryClient.invalidateQueries({ queryKey: ['dashboard-changes'] });
       alert('Preferences saved successfully!');
     },
   });
 
   const handleToggle = (key: keyof typeof preferences) => {
-    setPreferences(prev => ({ ...prev, [key]: !prev[key] }));
+    setPreferences((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
   const handleSave = () => {
     updateMutation.mutate(preferences);
   };
 
-  if (isLoading) return <div className="p-8 text-center text-gray-400">Loading settings...</div>;
-
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-8 animate-fade-in">
-      <div>
-        <h1 className="text-3xl font-bold text-white mb-2">Pulse Settings</h1>
-        <p className="text-gray-400">Tune the intelligence engine to match your trading style.</p>
+    <div className="max-w-4xl mx-auto p-4 sm:p-6 space-y-6 animate-fade-in-up">
+      <div className="bg-surface-900/60 border border-white/10 p-6 rounded-3xl backdrop-blur-xl shadow-xl">
+        <span className="text-xs font-bold uppercase tracking-wider text-cyan-400 flex items-center gap-1">
+          <Sparkles className="w-3.5 h-3.5" /> PULSE SIGNAL RULES
+        </span>
+        <h1 className="text-3xl font-extrabold text-white tracking-tight mt-1">Pulse Engine Settings</h1>
+        <p className="text-sm text-gray-400">Tune statistical anomaly detection thresholds and active signal feeds.</p>
       </div>
 
-      <div className="card space-y-6">
-        <div className="flex items-center gap-3 border-b border-gray-800 pb-4">
-          <Settings2 className="text-brand-500" />
-          <h2 className="text-xl font-medium text-white">Signal Detection</h2>
+      <div className="bg-surface-900/60 border border-white/10 rounded-3xl p-6 backdrop-blur-xl shadow-xl space-y-6">
+        <div className="flex items-center gap-3 border-b border-white/10 pb-4">
+          <Settings2 className="text-cyan-400" />
+          <h2 className="text-xl font-bold text-white">Signal Detection Rules</h2>
         </div>
 
         <div className="space-y-6">
           {/* Price Movement */}
           <div className="flex items-center justify-between">
             <div>
-              <h4 className="text-white font-medium">Price Movement</h4>
-              <p className="text-sm text-gray-500">Detect significant price spikes or drops.</p>
+              <h4 className="text-white font-semibold">Price Volatility Spikes</h4>
+              <p className="text-xs text-gray-400">Flag statistical price standard deviation anomalies.</p>
             </div>
             <label className="relative inline-flex items-center cursor-pointer">
-              <input type="checkbox" checked={preferences.priceMovementEnabled} onChange={() => handleToggle('priceMovementEnabled')} className="sr-only peer" />
-              <div className="w-11 h-6 bg-surface-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-500"></div>
+              <input
+                type="checkbox"
+                checked={preferences.priceMovementEnabled}
+                onChange={() => handleToggle('priceMovementEnabled')}
+                className="sr-only peer"
+              />
+              <div className="w-11 h-6 bg-surface-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-500"></div>
             </label>
           </div>
 
           {/* Volume Anomaly */}
           <div className="flex items-center justify-between">
             <div>
-              <h4 className="text-white font-medium">Volume Anomaly</h4>
-              <p className="text-sm text-gray-500">Detect unusually high trading volumes.</p>
+              <h4 className="text-white font-semibold">Volume Surge Anomalies</h4>
+              <p className="text-xs text-gray-400">Flag volume spikes exceeding 20-day moving average.</p>
             </div>
             <label className="relative inline-flex items-center cursor-pointer">
-              <input type="checkbox" checked={preferences.volumeAnomalyEnabled} onChange={() => handleToggle('volumeAnomalyEnabled')} className="sr-only peer" />
-              <div className="w-11 h-6 bg-surface-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-500"></div>
+              <input
+                type="checkbox"
+                checked={preferences.volumeAnomalyEnabled}
+                onChange={() => handleToggle('volumeAnomalyEnabled')}
+                className="sr-only peer"
+              />
+              <div className="w-11 h-6 bg-surface-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-500"></div>
             </label>
           </div>
 
           {/* News & Events */}
           <div className="flex items-center justify-between">
             <div>
-              <h4 className="text-white font-medium">News & Corporate Events</h4>
-              <p className="text-sm text-gray-500">Include major news and corporate earnings in updates.</p>
+              <h4 className="text-white font-semibold">News & Corporate Catalyst Events</h4>
+              <p className="text-xs text-gray-400">Include earnings guidance and news triggers in scoring.</p>
             </div>
             <label className="relative inline-flex items-center cursor-pointer">
-              <input type="checkbox" checked={preferences.newsEnabled} onChange={() => handleToggle('newsEnabled')} className="sr-only peer" />
-              <div className="w-11 h-6 bg-surface-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-500"></div>
+              <input
+                type="checkbox"
+                checked={preferences.newsEnabled}
+                onChange={() => handleToggle('newsEnabled')}
+                className="sr-only peer"
+              />
+              <div className="w-11 h-6 bg-surface-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-500"></div>
             </label>
           </div>
 
-          <div className="pt-6 border-t border-gray-800">
-            <h4 className="text-white font-medium mb-2">Noise Filter (Minimum Attention Score)</h4>
-            <p className="text-sm text-gray-500 mb-4">
-              Higher values mean you only see critical updates. Lower values show you everything.
-              Current threshold: <span className="text-brand-400 font-mono">{preferences.minimumAttentionScore}</span>
+          <div className="pt-6 border-t border-white/10">
+            <h4 className="text-white font-semibold mb-1">Noise Filter Threshold</h4>
+            <p className="text-xs text-gray-400 mb-4">
+              Minimum Attention Score to display stock updates. Current cutoff:{' '}
+              <span className="text-cyan-400 font-mono font-bold">{preferences.minimumAttentionScore}</span>
             </p>
-            <input 
-              type="range" 
-              min="0" 
-              max="50" 
+            <input
+              type="range"
+              min="0"
+              max="50"
               step="5"
               value={preferences.minimumAttentionScore}
-              onChange={(e) => setPreferences(prev => ({ ...prev, minimumAttentionScore: Number(e.target.value) }))}
-              className="w-full h-2 bg-surface-800 rounded-lg appearance-none cursor-pointer accent-brand-500"
+              onChange={(e) =>
+                setPreferences((prev) => ({ ...prev, minimumAttentionScore: Number(e.target.value) }))
+              }
+              className="w-full h-2 bg-surface-800 rounded-lg appearance-none cursor-pointer accent-cyan-500"
             />
-            <div className="flex justify-between text-xs text-gray-500 mt-2">
-              <span>Show Everything (0)</span>
-              <span>Only Important (&gt;25)</span>
-              <span>Only Critical (50)</span>
+            <div className="flex justify-between text-[10px] text-gray-500 font-mono mt-2">
+              <span>Show All (0)</span>
+              <span>Moderate (&gt;25)</span>
+              <span>Critical Only (50)</span>
             </div>
           </div>
         </div>
@@ -129,7 +149,7 @@ export function SettingsPage() {
           <button
             onClick={handleSave}
             disabled={updateMutation.isPending}
-            className="btn-primary flex items-center gap-2"
+            className="px-5 py-2.5 rounded-xl bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 hover:bg-cyan-500/30 font-semibold text-sm flex items-center gap-2 transition-all shadow-[0_0_15px_rgba(0,229,255,0.2)]"
           >
             <Save size={16} />
             {updateMutation.isPending ? 'Saving...' : 'Save Preferences'}

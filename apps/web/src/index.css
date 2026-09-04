@@ -71,13 +71,13 @@
 
   /* Button variants */
   .btn-primary {
-    @apply bg-brand-600 hover:bg-brand-500 text-white font-medium px-4 py-2 rounded-lg transition-all duration-200 shadow-[0_0_15px_rgba(37,99,235,0.4)] hover:shadow-[0_0_25px_rgba(37,99,235,0.6)];
+    @apply bg-brand-600 hover:bg-brand-500 text-white font-medium px-4 py-2 rounded-lg transition-all duration-200 shadow-[0_0_15px_rgba(37,99,235,0.4)];
   }
   .btn-secondary {
-    @apply bg-surface-800/80 hover:bg-surface-700/80 text-gray-200 font-medium px-4 py-2 rounded-lg border border-white/10 transition-colors duration-200 backdrop-blur-sm;
+    @apply bg-surface-800 hover:bg-gray-800 text-gray-200 font-medium px-4 py-2 rounded-lg border border-white/10 transition-colors duration-200 backdrop-blur-sm;
   }
   .btn-ghost {
-    @apply hover:bg-surface-800/50 text-gray-400 hover:text-white font-medium px-4 py-2 rounded-lg transition-colors duration-200;
+    @apply hover:bg-surface-800 text-gray-400 hover:text-white font-medium px-4 py-2 rounded-lg transition-colors duration-200;
   }
 
   /* Price colors */

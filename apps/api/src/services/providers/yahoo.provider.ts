@@ -3,7 +3,9 @@ const YahooFinanceClass = (yahooFinanceLib as any).default || yahooFinanceLib;
 const yahooFinance = new YahooFinanceClass();
 
 // Suppress the node version warning for clean logs in hackathon
-yahooFinance.suppressNotices(['yahooFinance.env']);
+if (typeof yahooFinance?.suppressNotices === 'function') {
+  yahooFinance.suppressNotices(['yahooFinance.env']);
+}
 
 import { Quote } from '@groww-pulse/shared';
 import { MarketProvider, MarketEvent } from './market.provider.js';

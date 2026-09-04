@@ -4,51 +4,69 @@
 
 // ── Attention Levels ──
 
-export enum AttentionLevel {
-  NORMAL = 'NORMAL',
-  WORTH_WATCHING = 'WORTH_WATCHING',
-  HIGH = 'HIGH',
-  CRITICAL = 'CRITICAL',
-}
+export type AttentionLevel = 'NORMAL' | 'WORTH_WATCHING' | 'HIGH' | 'CRITICAL';
+export const AttentionLevel = {
+  NORMAL: 'NORMAL' as const,
+  WORTH_WATCHING: 'WORTH_WATCHING' as const,
+  HIGH: 'HIGH' as const,
+  CRITICAL: 'CRITICAL' as const,
+};
 
 // ── Freshness States ──
 
-export enum FreshnessState {
-  FRESH = 'FRESH',
-  DELAYED = 'DELAYED',
-  STALE = 'STALE',
-  UNAVAILABLE = 'UNAVAILABLE',
-}
+export type FreshnessState = 'FRESH' | 'DELAYED' | 'STALE' | 'UNAVAILABLE';
+export const FreshnessState = {
+  FRESH: 'FRESH' as const,
+  DELAYED: 'DELAYED' as const,
+  STALE: 'STALE' as const,
+  UNAVAILABLE: 'UNAVAILABLE' as const,
+};
 
 // ── Change Event Types ──
 
-export enum EventType {
-  PRICE_MOVE = 'PRICE_MOVE',
-  VOLUME_ANOMALY = 'VOLUME_ANOMALY',
-  WEEK_52_HIGH = '52W_HIGH',
-  WEEK_52_LOW = '52W_LOW',
-  CORPORATE_EVENT = 'CORPORATE_EVENT',
-  NEWS_EVENT = 'NEWS_EVENT',
-  VOLATILITY_ANOMALY = 'VOLATILITY_ANOMALY',
-}
+export type EventType =
+  | 'PRICE_MOVE'
+  | 'VOLUME_ANOMALY'
+  | '52W_HIGH'
+  | '52W_LOW'
+  | 'CORPORATE_EVENT'
+  | 'NEWS_EVENT'
+  | 'VOLATILITY_ANOMALY';
+
+export const EventType = {
+  PRICE_MOVE: 'PRICE_MOVE' as const,
+  VOLUME_ANOMALY: 'VOLUME_ANOMALY' as const,
+  WEEK_52_HIGH: '52W_HIGH' as const,
+  WEEK_52_LOW: '52W_LOW' as const,
+  CORPORATE_EVENT: 'CORPORATE_EVENT' as const,
+  NEWS_EVENT: 'NEWS_EVENT' as const,
+  VOLATILITY_ANOMALY: 'VOLATILITY_ANOMALY' as const,
+};
 
 // ── Severity ──
 
-export enum Severity {
-  LOW = 'LOW',
-  MEDIUM = 'MEDIUM',
-  HIGH = 'HIGH',
-  CRITICAL = 'CRITICAL',
-}
+export type Severity = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+export const Severity = {
+  LOW: 'LOW' as const,
+  MEDIUM: 'MEDIUM' as const,
+  HIGH: 'HIGH' as const,
+  CRITICAL: 'CRITICAL' as const,
+};
 
 // ── Alert Condition Types ──
 
-export enum AlertConditionType {
-  PRICE_ABOVE = 'PRICE_ABOVE',
-  PRICE_BELOW = 'PRICE_BELOW',
-  PRICE_CHANGE_PERCENT = 'PRICE_CHANGE_PERCENT',
-  ATTENTION_SCORE_ABOVE = 'ATTENTION_SCORE_ABOVE',
-}
+export type AlertConditionType =
+  | 'PRICE_ABOVE'
+  | 'PRICE_BELOW'
+  | 'PRICE_CHANGE_PERCENT'
+  | 'ATTENTION_SCORE_ABOVE';
+
+export const AlertConditionType = {
+  PRICE_ABOVE: 'PRICE_ABOVE' as const,
+  PRICE_BELOW: 'PRICE_BELOW' as const,
+  PRICE_CHANGE_PERCENT: 'PRICE_CHANGE_PERCENT' as const,
+  ATTENTION_SCORE_ABOVE: 'ATTENTION_SCORE_ABOVE' as const,
+};
 
 // ── Market Data ──
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Activity, Zap, TrendingUp, AlertCircle } from 'lucide-react';
 
 const pulseMessages = [
@@ -13,7 +12,6 @@ export function PulseTicker() {
   return (
     <div className="w-full bg-surface-900/60 backdrop-blur-lg border-b border-white/10 overflow-hidden py-2 shadow-[0_4px_30px_rgba(0,0,0,0.5)] z-50 sticky top-0">
       <div className="flex animate-marquee whitespace-nowrap items-center">
-        {/* Double the messages for seamless looping */}
         {[...pulseMessages, ...pulseMessages].map((msg, idx) => (
           <span key={idx} className="flex items-center gap-2 mx-8 text-sm font-medium text-gray-300">
             {msg.icon}

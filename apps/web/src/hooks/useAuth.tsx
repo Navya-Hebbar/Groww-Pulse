@@ -1,14 +1,21 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { fetchApi } from '../lib/api';
 
-interface User {
+export interface User {
   id: string;
   email: string;
+  name?: string;
 }
 
+const DEFAULT_DEMO_USER: User = {
+  id: 'demo-user-id',
+  email: 'demo@growwpulse.dev',
+  name: 'Navya (Demo)',
+};
+
 interface AuthContextType {
-  user: User | null;
+  user: User;
   isLoading: boolean;
   login: (token: string) => void;
   logout: () => void;
@@ -17,21 +24,15 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
+  const [token, setToken] = useState<string | null>(localStorage.getItem('token') || 'demo-token');
   const queryClient = useQueryClient();
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['me'],
     queryFn: () => fetchApi<User>('/auth/me'),
-    enabled: !!token,
+    enabled: !!token && token !== 'demo-token',
     retry: false,
   });
-
-  useEffect(() => {
-    if (isError) {
-      logout();
-    }
-  }, [isError]);
 
   const login = (newToken: string) => {
     localStorage.setItem('token', newToken);
@@ -40,15 +41,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = () => {
     localStorage.removeItem('token');
-    setToken(null);
+    setToken('demo-token');
     queryClient.clear();
   };
+
+  const currentUser = data || DEFAULT_DEMO_USER;
 
   return (
     <AuthContext.Provider
       value={{
-        user: data || null,
-        isLoading: isLoading && !!token,
+        user: currentUser,
+        isLoading: isLoading && !!token && token !== 'demo-token',
         login,
         logout,
       }}

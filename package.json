@@ -28,5 +28,8 @@
     "node": ">=18.0.0"
   },
   "author": "Navya Hebbar",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^26.4.1"
+  }
 }
