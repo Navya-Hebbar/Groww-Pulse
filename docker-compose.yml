@@ -1,0 +1,99 @@
+# ──────────────────────────────────────────────
+# Groww Pulse — Docker Compose (Development)
+# ──────────────────────────────────────────────
+
+services:
+  # ── PostgreSQL ──
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: growwpulse
+      POSTGRES_PASSWORD: growwpulse
+      POSTGRES_DB: growwpulse
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U growwpulse"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ── Redis ──
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ── API ──
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+      target: development
+    ports:
+      - "3001:3001"
+    environment:
+      DATABASE_URL: postgresql://growwpulse:growwpulse@postgres:5432/growwpulse?schema=public
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: dev-secret-change-in-production
+      NODE_ENV: development
+      PORT: 3001
+      FRONTEND_URL: http://localhost:5173
+      DEMO_MODE: "false"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./apps/api/src:/app/apps/api/src
+      - ./packages:/app/packages
+      - ./prisma:/app/prisma
+
+  # ── Background Worker ──
+  worker:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+      target: development
+    command: ["node", "--import", "tsx", "apps/api/src/worker.ts"]
+    environment:
+      DATABASE_URL: postgresql://growwpulse:growwpulse@postgres:5432/growwpulse?schema=public
+      REDIS_URL: redis://redis:6379
+      NODE_ENV: development
+      DEMO_MODE: "false"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./apps/api/src:/app/apps/api/src
+      - ./packages:/app/packages
+      - ./prisma:/app/prisma
+
+  # ── Frontend (Vite dev server) ──
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      target: development
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_URL: http://localhost:3001
+    depends_on:
+      - api
+    volumes:
+      - ./apps/web/src:/app/apps/web/src
+      - ./apps/web/index.html:/app/apps/web/index.html
+
+volumes:
+  postgres_data:
