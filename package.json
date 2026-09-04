@@ -1,0 +1,32 @@
+{
+  "name": "groww-pulse",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Intelligent market watchlist — Know what changed. Know what matters.",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspaces --if-present",
+    "build": "npm run build --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "test:integration": "npm run test:integration --workspace=apps/api",
+    "test:e2e": "npx playwright test --config=tests/playwright.config.ts",
+    "db:migrate": "npx prisma migrate dev --schema=prisma/schema.prisma",
+    "db:push": "npx prisma db push --schema=prisma/schema.prisma",
+    "db:seed": "npx tsx prisma/seed.ts",
+    "db:studio": "npx prisma studio --schema=prisma/schema.prisma",
+    "db:generate": "npx prisma generate --schema=prisma/schema.prisma",
+    "docker:up": "docker compose up --build",
+    "docker:down": "docker compose down",
+    "docker:prod": "docker compose -f docker-compose.prod.yml up --build"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "author": "Navya Hebbar",
+  "license": "MIT"
+}
