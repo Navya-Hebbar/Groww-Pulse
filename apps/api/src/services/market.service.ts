@@ -1,69 +1,28 @@
 import { Quote } from '@groww-pulse/shared';
+import { MarketProvider } from './providers/market.provider.js';
+import { MockMarketProvider } from './providers/mock.provider.js';
+import { YahooFinanceProvider } from './providers/yahoo.provider.js';
 
 class MarketService {
-  private basePrices: Record<string, number> = {
-    'RELIANCE': 2800,
-    'TCS': 3900,
-    'INFY': 1550,
-    'HDFCBANK': 1700,
-    'WIPRO': 480,
-    'ICICIBANK': 1150,
-    'SBIN': 800,
-    'BHARTIARTL': 1580,
-    'ITC': 450,
-    'KOTAKBANK': 1850,
-    'LT': 3600,
-    'HINDUNILVR': 2500,
-  };
+  private provider: MarketProvider;
+
+  constructor() {
+    const isDemo = process.env.DEMO_MODE !== 'false';
+    if (isDemo) {
+      console.log('📈 Starting MarketService in DEMO MODE (Mock Data)');
+      this.provider = new MockMarketProvider();
+    } else {
+      console.log('🚀 Starting MarketService in LIVE MODE (Yahoo Finance)');
+      this.provider = new YahooFinanceProvider();
+    }
+  }
 
   async getQuotes(symbols: string[]): Promise<Quote[]> {
-    const now = new Date();
-    
-    return symbols.map((symbol) => {
-      const basePrice = this.basePrices[symbol] || 1000;
-      const changePercent = (Math.random() - 0.5) * 3; 
-      const price = basePrice * (1 + changePercent / 100);
-      const previousClose = basePrice;
-      const volume = Math.random() > 0.9 ? 5000000 : 1000000;
-
-      return {
-        symbol,
-        price: Number(price.toFixed(2)),
-        volume,
-        dayHigh: Number((price * 1.01).toFixed(2)),
-        dayLow: Number((price * 0.99).toFixed(2)),
-        week52High: Number((price * 1.2).toFixed(2)),
-        week52Low: Number((price * 0.8).toFixed(2)),
-        previousClose,
-        open: previousClose,
-        timestamp: now,
-        source: 'mock',
-      };
-    });
+    return this.provider.getQuotes(symbols);
   }
 
   async getEvents(symbols: string[]) {
-    const mockEvents = [];
-    
-    if (symbols.includes('RELIANCE') && Math.random() > 0.7) {
-      mockEvents.push({
-        symbol: 'RELIANCE',
-        type: 'NEWS_HIGH_IMPACT',
-        title: 'Reliance Announces Major Green Energy Investment',
-        timestamp: new Date(),
-      });
-    }
-
-    if (symbols.includes('TCS') && Math.random() > 0.8) {
-      mockEvents.push({
-        symbol: 'TCS',
-        type: 'CORPORATE_EARNINGS',
-        title: 'TCS Q3 Results Exceed Expectations',
-        timestamp: new Date(),
-      });
-    }
-
-    return mockEvents;
+    return this.provider.getEvents(symbols);
   }
 }
 

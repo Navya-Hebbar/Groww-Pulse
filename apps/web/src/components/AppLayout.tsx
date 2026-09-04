@@ -57,12 +57,31 @@ export function Navigation() {
   );
 }
 
+import { PulseTicker } from './PulseTicker';
+
 export function AppLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-screen bg-surface-900">
-      <Navigation />
-      <main className="flex-1 md:ml-64 relative">
-        {children}
+    <div className="flex min-h-screen bg-surface-900 relative">
+      {/* Background Image with Overlay */}
+      <div 
+        className="fixed inset-0 z-0 opacity-20 pointer-events-none"
+        style={{
+          backgroundImage: 'url(/hero-bg.jpg)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed',
+        }}
+      />
+      <div className="fixed inset-0 z-0 bg-gradient-to-b from-transparent to-surface-900 pointer-events-none" />
+
+      <div className="z-10 w-64 fixed top-0 left-0 h-full hidden md:block">
+        <Navigation />
+      </div>
+      <main className="flex-1 md:ml-64 relative z-10 flex flex-col min-h-screen">
+        <PulseTicker />
+        <div className="flex-1 pb-10">
+          {children}
+        </div>
       </main>
     </div>
   );
