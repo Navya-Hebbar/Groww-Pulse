@@ -13,6 +13,8 @@ import {
   PlayCircle,
   Building2,
   CheckCircle2,
+  Download,
+  HelpCircle,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { AttentionLevel } from '@groww-pulse/shared';
@@ -20,6 +22,7 @@ import { ParticleCanvas } from '../components/ParticleCanvas';
 import { MarketStories, type StoryItem } from '../components/MarketStories';
 import { PulseAudioBriefing } from '../components/PulseAudioBriefing';
 import { TimeMachineSlider, type TimeMachinePreset } from '../components/TimeMachineSlider';
+import { ExplainabilityModal } from '../components/ExplainabilityModal';
 
 // Helper to format currency
 const formatCurrency = (val: number) =>
@@ -116,6 +119,7 @@ const getAttentionBadge = (level: AttentionLevel) => {
 export function DashboardPage() {
   const { user } = useAuth();
   const [isStoriesOpen, setIsStoriesOpen] = useState(false);
+  const [selectedExplainabilityInsight, setSelectedExplainabilityInsight] = useState<any | null>(null);
   const [timePreset, setTimePreset] = useState<TimeMachinePreset>('real');
 
   const { data: remoteChanges } = useQuery({
@@ -139,6 +143,24 @@ export function DashboardPage() {
     secondaryReason: c.changes?.[0]?.description,
     goalLinked: c.linkedGoal,
   }));
+
+  const handleExportReport = () => {
+    const reportLines = [
+      `# GROWW PULSE MARKET ATTENTION REPORT`,
+      `Generated: ${new Date().toLocaleString()}`,
+      `User Baseline Mode: ${timePreset.toUpperCase()}`,
+      ``,
+      `--- ATTENTION SIGNALS (${changes.length}) ---`,
+      ...changes.map((c: any) => 
+        `• [Score ${c.attentionScore || 85}] ${c.symbol} (₹${c.currentPrice}) - ${c.changes?.[0]?.title || 'Signal Active'}`
+      ),
+      ``,
+      `Groww Pulse — Know what changed. Know what matters.`
+    ];
+    const text = reportLines.join('\n');
+    navigator.clipboard?.writeText(text);
+    alert('📊 Market Attention Report copied to clipboard!');
+  };
 
   return (
     <div className="max-w-5xl mx-auto p-4 sm:p-6 space-y-6 animate-fade-in-up mt-2">
@@ -181,6 +203,15 @@ export function DashboardPage() {
             )}
 
             <button
+              onClick={handleExportReport}
+              className="px-3.5 py-2.5 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 font-semibold border border-cyan-500/30 text-xs transition-all flex items-center gap-2 backdrop-blur-md"
+              title="Export Attention Report to clipboard"
+            >
+              <Download className="w-4 h-4" />
+              <span>Export Report</span>
+            </button>
+
+            <button
               onClick={() => {
                 fetchApi('/states/mark-all-seen', { method: 'POST' }).then(() => {
                   window.location.reload();
@@ -210,7 +241,7 @@ export function DashboardPage() {
         </div>
         <div className="text-xs text-gray-400 flex items-center gap-1.5 font-mono">
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          REAL-TIME COMPARISON
+          CLICK ANY CARD FOR EXPLAINABILITY SCORE
         </div>
       </div>
 
@@ -240,7 +271,8 @@ export function DashboardPage() {
             return (
               <div
                 key={insight.stockId}
-                className="group relative overflow-hidden rounded-3xl bg-surface-900/80 border border-white/10 backdrop-blur-2xl shadow-xl hover:shadow-[0_0_30px_rgba(0,208,156,0.2)] hover:border-emerald-500/50 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between"
+                onClick={() => setSelectedExplainabilityInsight(insight)}
+                className="group relative overflow-hidden rounded-3xl bg-surface-900/80 border border-white/10 backdrop-blur-2xl shadow-xl hover:shadow-[0_0_30px_rgba(0,208,156,0.2)] hover:border-emerald-500/50 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between cursor-pointer"
               >
                 {/* Top Sector Artwork Card Cover */}
                 <div className="relative h-36 w-full overflow-hidden bg-surface-950">
@@ -252,8 +284,8 @@ export function DashboardPage() {
                   <div className="absolute inset-0 bg-gradient-to-t from-surface-900 via-surface-900/40 to-transparent" />
                   
                   {/* Floating Attention Score Shield Badge */}
-                  <div className="absolute top-3 right-3 flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-xs font-black text-white shadow-lg">
-                    <Sparkles className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
+                  <div className="absolute top-3 right-3 flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-xs font-black text-white shadow-lg group-hover:border-cyan-400/60 transition-colors">
+                    <HelpCircle className="w-3.5 h-3.5 text-cyan-400" />
                     <span>Score: {insight.attentionScore || 85}</span>
                   </div>
 
@@ -330,6 +362,13 @@ export function DashboardPage() {
         stories={storyItems}
         isOpen={isStoriesOpen}
         onClose={() => setIsStoriesOpen(false)}
+      />
+
+      {/* Explainability Breakdown Modal */}
+      <ExplainabilityModal
+        insight={selectedExplainabilityInsight}
+        isOpen={!!selectedExplainabilityInsight}
+        onClose={() => setSelectedExplainabilityInsight(null)}
       />
     </div>
   );
