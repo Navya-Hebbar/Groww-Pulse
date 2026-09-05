@@ -15,7 +15,7 @@ const DEFAULT_DEMO_USER: User = {
 };
 
 interface AuthContextType {
-  user: User;
+  user: User | null;
   isLoading: boolean;
   login: (token: string) => void;
   logout: () => void;
@@ -24,7 +24,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [token, setToken] = useState<string | null>(localStorage.getItem('token') || 'demo-token');
+  const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
   const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
@@ -41,11 +41,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = () => {
     localStorage.removeItem('token');
-    setToken('demo-token');
+    setToken(null);
     queryClient.clear();
   };
 
-  const currentUser = data || DEFAULT_DEMO_USER;
+  const currentUser = token
+    ? (token === 'demo-token' ? DEFAULT_DEMO_USER : data || DEFAULT_DEMO_USER)
+    : null;
 
   return (
     <AuthContext.Provider
