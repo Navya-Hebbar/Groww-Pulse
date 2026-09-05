@@ -15,6 +15,12 @@ export const PulseAudioBriefing: React.FC<PulseAudioBriefingProps> = ({ items, u
     if (!('speechSynthesis' in window)) {
       setIsSupported(false);
     }
+
+    return () => {
+      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+    };
   }, []);
 
   const generateScript = () => {

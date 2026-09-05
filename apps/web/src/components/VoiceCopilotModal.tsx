@@ -73,6 +73,20 @@ export function VoiceCopilotModal({ isOpen, onClose }: VoiceCopilotProps) {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  const toggleMute = () => {
+    const nextState = !isSpeechEnabled;
+    setIsSpeechEnabled(nextState);
+    if (!nextState && typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+  };
+
+  useEffect(() => {
+    if (!isSpeechEnabled && typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+  }, [isSpeechEnabled]);
+
   const speakText = (text: string) => {
     if (!isSpeechEnabled || typeof window === 'undefined') return;
     if ('speechSynthesis' in window) {
@@ -216,13 +230,13 @@ export function VoiceCopilotModal({ isOpen, onClose }: VoiceCopilotProps) {
 
           <div className="relative z-10 flex items-center gap-2">
             <button
-              onClick={() => setIsSpeechEnabled(!isSpeechEnabled)}
+              onClick={toggleMute}
               className={`p-2 rounded-xl border transition-all ${
                 isSpeechEnabled
                   ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40'
                   : 'bg-surface-800 text-gray-500 border-white/10'
               }`}
-              title={isSpeechEnabled ? 'Text-to-speech Enabled' : 'Text-to-speech Muted'}
+              title={isSpeechEnabled ? 'Text-to-speech Enabled (Click to Mute)' : 'Text-to-speech Muted (Click to Unmute)'}
             >
               {isSpeechEnabled ? <Volume2 size={18} /> : <VolumeX size={18} />}
             </button>
