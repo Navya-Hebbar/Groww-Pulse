@@ -74,10 +74,10 @@ export const ParticleCanvas: React.FC = () => {
           const dy = particles[i].y - particles[j].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
 
-          if (dist < 110) {
+          if (dist < 100) {
             ctx.beginPath();
-            ctx.strokeStyle = `rgba(0, 229, 255, ${0.15 * (1 - dist / 110)})`;
-            ctx.lineWidth = 0.8;
+            ctx.strokeStyle = `rgba(16, 185, 129, ${0.08 * (1 - dist / 100)})`;
+            ctx.lineWidth = 0.6;
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
             ctx.stroke();

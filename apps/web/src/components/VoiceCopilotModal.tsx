@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Mic, MicOff, Volume2, VolumeX, Sparkles, Send, X, Bot, User, ArrowUpRight, ShieldAlert, Zap } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Mic, MicOff, Volume2, VolumeX, Sparkles, Send, X, Bot, User } from 'lucide-react';
 
 interface Message {
   id: string;
@@ -20,9 +20,9 @@ export function VoiceCopilotModal({ isOpen, onClose }: VoiceCopilotProps) {
     {
       id: '1',
       sender: 'ai',
-      text: 'Namaste! I am Groww Pulse AI Copilot. Ask me about your watchlist, market trends, stock sentiment, or say "Simulate Market Crash"!',
+      text: 'Hello! I am Groww Pulse Voice Assistant. Ask me about your watchlist, market trends, stock sentiment, or financial goal progress.',
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      badge: 'PRO AI',
+      badge: 'PULSE ASSISTANT',
     },
   ]);
   const [inputQuery, setInputQuery] = useState('');
@@ -134,55 +134,31 @@ export function VoiceCopilotModal({ isOpen, onClose }: VoiceCopilotProps) {
     // Simulate AI response logic
     setTimeout(() => {
       let aiReply = '';
-      let badge = 'AI INTEL';
+      let badge = 'MARKET SUMMARY';
       const q = textToSubmit.toLowerCase();
 
       if (q.includes('reliance') || q.includes('ril')) {
         aiReply = 'RELIANCE (NSE) is trading at ₹2,940.50 (+3.85%). 3.4x volume spike detected within the last 2 hours, approaching its 52-week high of ₹2,980.00.';
-        badge = 'STOCK PULSE';
+        badge = 'STOCK UPDATE';
       } else if (q.includes('tcs') || q.includes('tata consultancy')) {
-        aiReply = 'TCS (NSE) is trading at ₹4,180.00 (+2.15%). Strong morning momentum following Q3 earnings guidance announcement. Linked to your Wealth Building 2035 goal.';
-        badge = 'STOCK PULSE';
+        aiReply = 'TCS (NSE) is trading at ₹4,180.00 (+2.15%). Strong morning momentum following Q3 earnings guidance announcement.';
+        badge = 'STOCK UPDATE';
       } else if (q.includes('hdfc') || q.includes('hdfcbank')) {
         aiReply = 'HDFC Bank is trading at ₹1,645.20 (-1.40%). Bounced off 50-day EMA support with unusual call option OI buildup at ₹1,650 strike.';
-        badge = 'STOCK PULSE';
-      } else if (q.includes('infy') || q.includes('infosys')) {
-        aiReply = 'Infosys (NSE) is trading at ₹1,580.40 (+1.85%). Outperforming Nifty IT index following cloud transformation deal wins.';
-        badge = 'STOCK PULSE';
-      } else if (q.includes('wipro')) {
-        aiReply = 'Wipro is trading at ₹524.00 (+0.45%). ₹450 Cr block deal registered with neutral institutional sentiment.';
-        badge = 'STOCK PULSE';
-      } else if (q.includes('tata motors') || q.includes('tatamotors')) {
-        aiReply = 'Tata Motors is trading at ₹985.00 (+3.10%). Commercial vehicle & EV sales volumes grew 24% YoY.';
-        badge = 'STOCK PULSE';
+        badge = 'STOCK UPDATE';
       } else if (q.includes('goal') || q.includes('house') || q.includes('education') || q.includes('target')) {
         aiReply = 'You have 2 active financial goals: "House Downpayment" (₹50L target by 2030) linked to HDFC Bank & Reliance, and "Education" (₹15L target by 2029) linked to INFY.';
-        badge = 'GOAL PULSE';
+        badge = 'GOAL UPDATE';
       } else if (q.includes('watch') || q.includes('portfolio') || q.includes('my stock')) {
-        aiReply = 'Your watchlists track 12 stocks with an average 24h gain of +1.82%. Top gainers are RELIANCE (+3.85%) and TCS (+2.15%). 2 critical anomalies detected.';
-        badge = 'PORTFOLIO INTELLIGENCE';
+        aiReply = 'Your watchlists track 12 stocks with an average 24h gain of +1.82%. Top gainers are RELIANCE (+3.85%) and TCS (+2.15%).';
+        badge = 'PORTFOLIO OVERVIEW';
       } else if (q.includes('crash') || q.includes('simulate') || q.includes('what if') || q.includes('shock')) {
-        aiReply = 'Simulation Complete: In a -5% Market Shock scenario, your tech-heavy allocation reduces drawdowns by 1.8% compared to NIFTY50 due to defensive cash reserves.';
-        badge = 'STRESS TEST AI';
-      } else if (q.includes('audio') || q.includes('briefing') || q.includes('summary') || q.includes('podcast')) {
-        aiReply = 'Generating 60-second audio summary: Markets are trading bullish near all-time highs (+0.75%). Foreign Institutional Investors (FII) net bought ₹1,420 Cr today.';
-        badge = 'DAILY PODCAST';
-      } else if (q.includes('talkback') || q.includes('voice') || q.includes('accessibility') || q.includes('screen reader')) {
-        aiReply = 'TalkBack & Voice Assistant Active: You can issue hands-free voice commands to inspect stock attention scores, portfolio goals, macro stress tests, or market summaries.';
-        badge = 'ACCESSIBILITY AI';
-      } else if (q.includes('bank') || q.includes('financial') || q.includes('it') || q.includes('energy') || q.includes('sector')) {
-        aiReply = 'Sector Flow Radar: IT Services is leading with +2.8% net institutional inflow, Banking is bullish at +1.9%, while Energy is consolidating (-0.7%).';
-        badge = 'SECTOR HEATMAP';
-      } else if (q.includes('alert') || q.includes('anomaly') || q.includes('spike') || q.includes('signal')) {
-        aiReply = '4 Active Anomaly Signals: RELIANCE (Volume Surge z-score 2.85), TCS (Earnings Momentum), HDFCBANK (RSI Divergence), and WIPRO (Block Deal).';
-        badge = 'ANOMALY RADAR';
-      } else if (q.includes('hi') || q.includes('hello') || q.includes('hey') || q.includes('help') || q.includes('who are you')) {
-        aiReply = 'Namaste! I am Groww Pulse Voice Copilot. Ask me about stock prices (e.g. Reliance, TCS, HDFC), sector trends, financial goals, or say "Simulate Market Crash"!';
-        badge = 'COPILOT ASSISTANT';
+        aiReply = 'Simulation Result: In a -5% Market Shock scenario, your tech-heavy allocation reduces drawdowns by 1.8% compared to NIFTY50 due to defensive cash reserves.';
+        badge = 'STRESS TEST RESULT';
       } else {
         const cleanQuery = textToSubmit.replace(/[^a-zA-Z0-9\s]/g, '').trim();
-        aiReply = `Scanning real-time market feeds for "${cleanQuery}": NIFTY 50 is at 24,850.15 (+0.75%). 3 stocks in your watchlist match this query with positive momentum and active attention signals.`;
-        badge = 'MARKET INTELLIGENCE';
+        aiReply = `Scanning market data for "${cleanQuery}": NIFTY 50 is at 24,850.15 (+0.75%). 3 stocks in your watchlist match this query with positive momentum.`;
+        badge = 'MARKET DATA';
       }
 
       const aiMsg: Message = {
@@ -196,53 +172,47 @@ export function VoiceCopilotModal({ isOpen, onClose }: VoiceCopilotProps) {
       setMessages((prev) => [...prev, aiMsg]);
       setIsProcessing(false);
       speakText(aiReply);
-    }, 900);
+    }, 600);
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-fadeIn">
-      <div className="bg-surface-900 border border-cyan-500/30 rounded-2xl w-full max-w-xl shadow-[0_0_50px_rgba(0,229,255,0.25)] overflow-hidden flex flex-col h-[600px] max-h-[90vh]">
-        {/* Visual Header Banner */}
-        <div className="relative p-5 border-b border-cyan-500/20 flex items-center justify-between overflow-hidden bg-surface-950">
-          <img
-            src="/assets/ai_copilot_hero.jpg"
-            alt="AI Copilot Banner"
-            className="w-full h-full object-cover object-center opacity-30 absolute inset-0 pointer-events-none"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-surface-950 via-surface-950/80 to-transparent" />
-
-          <div className="relative z-10 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center text-cyan-300 shadow-[0_0_15px_rgba(0,229,255,0.3)]">
-              <Bot className="w-6 h-6 animate-pulse" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-fadeIn">
+      <div className="bg-zinc-900 border border-zinc-800 rounded-2xl w-full max-w-xl shadow-2xl overflow-hidden flex flex-col h-[600px] max-h-[90vh]">
+        
+        {/* Header */}
+        <div className="p-4 border-b border-zinc-800 bg-zinc-950/80 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+              <Bot className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="font-bold text-white tracking-wide">Groww Voice AI Copilot</h3>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
-                  LIVE VOICE
+                <h3 className="font-bold text-white tracking-tight">Voice Assistant</h3>
+                <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-zinc-800 text-zinc-300 border border-zinc-700 uppercase tracking-wide">
+                  Active
                 </span>
               </div>
-              <p className="text-xs text-gray-300">Ask anything about your portfolio or market signals</p>
+              <p className="text-xs text-zinc-400 mt-0.5">Ask questions about your portfolio or market trends</p>
             </div>
           </div>
 
-          <div className="relative z-10 flex items-center gap-2">
+          <div className="flex items-center gap-2">
             <button
               onClick={toggleMute}
-              className={`p-2 rounded-xl border transition-all ${
+              className={`p-2 rounded-lg border transition-all ${
                 isSpeechEnabled
-                  ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40'
-                  : 'bg-surface-800 text-gray-500 border-white/10'
+                  ? 'bg-zinc-800 text-zinc-200 border-zinc-700'
+                  : 'bg-zinc-900 text-zinc-500 border-zinc-800'
               }`}
-              title={isSpeechEnabled ? 'Text-to-speech Enabled (Click to Mute)' : 'Text-to-speech Muted (Click to Unmute)'}
+              title={isSpeechEnabled ? 'Text-to-speech Enabled' : 'Text-to-speech Muted'}
             >
               {isSpeechEnabled ? <Volume2 size={18} /> : <VolumeX size={18} />}
             </button>
             <button
               onClick={onClose}
-              className="p-2 rounded-xl text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
+              className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
             >
               <X size={20} />
             </button>
@@ -250,8 +220,8 @@ export function VoiceCopilotModal({ isOpen, onClose }: VoiceCopilotProps) {
         </div>
 
         {/* Quick Suggestion Chips */}
-        <div className="px-4 py-2 bg-surface-950/60 border-b border-white/5 flex items-center gap-2 overflow-x-auto text-xs no-scrollbar">
-          <span className="text-gray-500 text-[11px] whitespace-nowrap">Try asking:</span>
+        <div className="px-4 py-2 bg-zinc-950/60 border-b border-zinc-800 flex items-center gap-2 overflow-x-auto text-xs no-scrollbar">
+          <span className="text-zinc-500 text-[11px] whitespace-nowrap">Suggestions:</span>
           {[
             'Watchlist summary',
             'Simulate Market Crash',
@@ -261,7 +231,7 @@ export function VoiceCopilotModal({ isOpen, onClose }: VoiceCopilotProps) {
             <button
               key={chip}
               onClick={() => handleUserSubmit(chip)}
-              className="px-2.5 py-1 rounded-full bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 border border-cyan-500/20 transition-all shrink-0 hover:scale-105"
+              className="px-2.5 py-1 rounded-full bg-zinc-800 hover:bg-zinc-700 text-zinc-300 border border-zinc-700 transition-colors shrink-0"
             >
               {chip}
             </button>
@@ -269,48 +239,48 @@ export function VoiceCopilotModal({ isOpen, onClose }: VoiceCopilotProps) {
         </div>
 
         {/* Chat Message List */}
-        <div className="flex-1 p-4 overflow-y-auto space-y-4 bg-surface-950/40">
+        <div className="flex-1 p-4 overflow-y-auto space-y-4 bg-zinc-900">
           {messages.map((msg) => (
             <div
               key={msg.id}
               className={`flex gap-3 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               {msg.sender === 'ai' && (
-                <div className="w-8 h-8 rounded-lg bg-cyan-500/20 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shrink-0 mt-1">
-                  <Sparkles size={16} />
+                <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0 mt-1">
+                  <Sparkles size={15} />
                 </div>
               )}
 
               <div
                 className={`max-w-[80%] rounded-2xl p-3.5 space-y-1.5 ${
                   msg.sender === 'user'
-                    ? 'bg-cyan-600/30 text-white border border-cyan-500/40 rounded-tr-none'
-                    : 'bg-surface-850/90 text-gray-200 border border-white/10 rounded-tl-none shadow-lg'
+                    ? 'bg-emerald-600 text-white rounded-tr-none shadow-sm'
+                    : 'bg-zinc-950/80 text-zinc-200 border border-zinc-800 rounded-tl-none'
                 }`}
               >
                 {msg.badge && (
-                  <span className="inline-block px-2 py-0.5 text-[10px] font-bold rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 uppercase tracking-wider mb-1">
+                  <span className="inline-block px-2 py-0.5 text-[10px] font-semibold rounded bg-zinc-800 text-zinc-300 border border-zinc-700 uppercase tracking-wider mb-1">
                     {msg.badge}
                   </span>
                 )}
                 <p className="text-sm leading-relaxed whitespace-pre-line">{msg.text}</p>
-                <div className="text-[10px] text-gray-400 text-right">{msg.timestamp}</div>
+                <div className={`text-[10px] text-right ${msg.sender === 'user' ? 'text-emerald-100' : 'text-zinc-500'}`}>{msg.timestamp}</div>
               </div>
 
               {msg.sender === 'user' && (
-                <div className="w-8 h-8 rounded-lg bg-purple-500/20 border border-purple-500/30 flex items-center justify-center text-purple-300 shrink-0 mt-1">
-                  <User size={16} />
+                <div className="w-8 h-8 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-300 shrink-0 mt-1">
+                  <User size={15} />
                 </div>
               )}
             </div>
           ))}
 
           {isProcessing && (
-            <div className="flex items-center gap-3 text-cyan-400 text-sm animate-pulse">
-              <div className="w-8 h-8 rounded-lg bg-cyan-500/20 border border-cyan-500/30 flex items-center justify-center">
-                <Sparkles size={16} className="animate-spin" />
+            <div className="flex items-center gap-3 text-zinc-400 text-sm">
+              <div className="w-8 h-8 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center">
+                <Sparkles size={15} className="animate-spin text-emerald-400" />
               </div>
-              <span>Pulse AI is scanning market feeds...</span>
+              <span>Processing request...</span>
             </div>
           )}
 
@@ -318,7 +288,7 @@ export function VoiceCopilotModal({ isOpen, onClose }: VoiceCopilotProps) {
         </div>
 
         {/* Input Controls */}
-        <div className="p-4 bg-surface-900 border-t border-white/10">
+        <div className="p-4 bg-zinc-950 border-t border-zinc-800">
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -329,28 +299,28 @@ export function VoiceCopilotModal({ isOpen, onClose }: VoiceCopilotProps) {
             <button
               type="button"
               onClick={toggleListening}
-              className={`p-3 rounded-xl border transition-all ${
+              className={`p-2.5 rounded-xl border transition-all ${
                 isListening
-                  ? 'bg-red-500 text-white border-red-400 animate-bounce shadow-[0_0_20px_rgba(239,68,68,0.5)]'
-                  : 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30 hover:bg-cyan-500/30'
+                  ? 'bg-rose-600 text-white border-rose-500'
+                  : 'bg-zinc-800 text-zinc-300 border-zinc-700 hover:bg-zinc-700'
               }`}
-              title={isListening ? 'Stop Listening' : 'Click to Speak (Voice Command)'}
+              title={isListening ? 'Stop Listening' : 'Voice Command'}
             >
-              {isListening ? <MicOff size={20} /> : <Mic size={20} />}
+              {isListening ? <MicOff size={18} /> : <Mic size={18} />}
             </button>
 
             <input
               type="text"
               value={inputQuery}
               onChange={(e) => setInputQuery(e.target.value)}
-              placeholder={isListening ? 'Listening to your voice...' : 'Ask AI Copilot... (e.g. "What is my top stock?")'}
-              className="flex-1 bg-surface-950 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500/50"
+              placeholder={isListening ? 'Listening...' : 'Ask a question...'}
+              className="flex-1 bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-700"
             />
 
             <button
               type="submit"
               disabled={!inputQuery.trim()}
-              className="p-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 disabled:opacity-50 text-white font-medium rounded-xl shadow-[0_0_15px_rgba(0,229,255,0.3)] transition-all"
+              className="p-2.5 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 text-white font-medium rounded-xl transition-all shadow-sm"
             >
               <Send size={18} />
             </button>
