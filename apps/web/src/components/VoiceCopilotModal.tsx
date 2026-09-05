@@ -123,20 +123,52 @@ export function VoiceCopilotModal({ isOpen, onClose }: VoiceCopilotProps) {
       let badge = 'AI INTEL';
       const q = textToSubmit.toLowerCase();
 
-      if (q.includes('reliance') || q.includes('rIL')) {
-        aiReply = 'RELIANCE (NSE) is currently trading at ₹2,984.50 (+1.45%). Strong institutional buying observed after Q3 retail revenue expansion announcements.';
+      if (q.includes('reliance') || q.includes('ril')) {
+        aiReply = 'RELIANCE (NSE) is trading at ₹2,940.50 (+3.85%). 3.4x volume spike detected within the last 2 hours, approaching its 52-week high of ₹2,980.00.';
         badge = 'STOCK PULSE';
+      } else if (q.includes('tcs') || q.includes('tata consultancy')) {
+        aiReply = 'TCS (NSE) is trading at ₹4,180.00 (+2.15%). Strong morning momentum following Q3 earnings guidance announcement. Linked to your Wealth Building 2035 goal.';
+        badge = 'STOCK PULSE';
+      } else if (q.includes('hdfc') || q.includes('hdfcbank')) {
+        aiReply = 'HDFC Bank is trading at ₹1,645.20 (-1.40%). Bounced off 50-day EMA support with unusual call option OI buildup at ₹1,650 strike.';
+        badge = 'STOCK PULSE';
+      } else if (q.includes('infy') || q.includes('infosys')) {
+        aiReply = 'Infosys (NSE) is trading at ₹1,580.40 (+1.85%). Outperforming Nifty IT index following cloud transformation deal wins.';
+        badge = 'STOCK PULSE';
+      } else if (q.includes('wipro')) {
+        aiReply = 'Wipro is trading at ₹524.00 (+0.45%). ₹450 Cr block deal registered with neutral institutional sentiment.';
+        badge = 'STOCK PULSE';
+      } else if (q.includes('tata motors') || q.includes('tatamotors')) {
+        aiReply = 'Tata Motors is trading at ₹985.00 (+3.10%). Commercial vehicle & EV sales volumes grew 24% YoY.';
+        badge = 'STOCK PULSE';
+      } else if (q.includes('goal') || q.includes('house') || q.includes('education') || q.includes('target')) {
+        aiReply = 'You have 2 active financial goals: "House Downpayment" (₹50L target by 2030) linked to HDFC Bank & Reliance, and "Education" (₹15L target by 2029) linked to INFY.';
+        badge = 'GOAL PULSE';
       } else if (q.includes('watch') || q.includes('portfolio') || q.includes('my stock')) {
-        aiReply = 'Your watchlist contains 12 stocks with an average 24h gain of +1.82%. Top gainers are TCS (+2.4%) and HDFCBANK (+1.9%). Risk score is currently Moderate (34/100).';
+        aiReply = 'Your watchlists track 12 stocks with an average 24h gain of +1.82%. Top gainers are RELIANCE (+3.85%) and TCS (+2.15%). 2 critical anomalies detected.';
         badge = 'PORTFOLIO INTELLIGENCE';
-      } else if (q.includes('crash') || q.includes('simulate') || q.includes('what if')) {
+      } else if (q.includes('crash') || q.includes('simulate') || q.includes('what if') || q.includes('shock')) {
         aiReply = 'Simulation Complete: In a -5% Market Shock scenario, your tech-heavy allocation reduces drawdowns by 1.8% compared to NIFTY50 due to defensive cash reserves.';
         badge = 'STRESS TEST AI';
-      } else if (q.includes('audio') || q.includes('briefing') || q.includes('summary')) {
-        aiReply = 'Generating your 60-second audio summary... Indian markets are trading near all-time highs driven by banking sector rally. Foreign Institutional Investors (FII) net bought ₹1,420 Cr today.';
+      } else if (q.includes('audio') || q.includes('briefing') || q.includes('summary') || q.includes('podcast')) {
+        aiReply = 'Generating 60-second audio summary: Markets are trading bullish near all-time highs (+0.75%). Foreign Institutional Investors (FII) net bought ₹1,420 Cr today.';
         badge = 'DAILY PODCAST';
+      } else if (q.includes('talkback') || q.includes('voice') || q.includes('accessibility') || q.includes('screen reader')) {
+        aiReply = 'TalkBack & Voice Assistant Active: You can issue hands-free voice commands to inspect stock attention scores, portfolio goals, macro stress tests, or market summaries.';
+        badge = 'ACCESSIBILITY AI';
+      } else if (q.includes('bank') || q.includes('financial') || q.includes('it') || q.includes('energy') || q.includes('sector')) {
+        aiReply = 'Sector Flow Radar: IT Services is leading with +2.8% net institutional inflow, Banking is bullish at +1.9%, while Energy is consolidating (-0.7%).';
+        badge = 'SECTOR HEATMAP';
+      } else if (q.includes('alert') || q.includes('anomaly') || q.includes('spike') || q.includes('signal')) {
+        aiReply = '4 Active Anomaly Signals: RELIANCE (Volume Surge z-score 2.85), TCS (Earnings Momentum), HDFCBANK (RSI Divergence), and WIPRO (Block Deal).';
+        badge = 'ANOMALY RADAR';
+      } else if (q.includes('hi') || q.includes('hello') || q.includes('hey') || q.includes('help') || q.includes('who are you')) {
+        aiReply = 'Namaste! I am Groww Pulse Voice Copilot. Ask me about stock prices (e.g. Reliance, TCS, HDFC), sector trends, financial goals, or say "Simulate Market Crash"!';
+        badge = 'COPILOT ASSISTANT';
       } else {
-        aiReply = `Analyzed "${textToSubmit}": Market momentum remains bullish (+0.84% NIFTY 50). RSI signals healthy consolidation. High liquidity detected in Banking & Energy sectors.`;
+        const cleanQuery = textToSubmit.replace(/[^a-zA-Z0-9\s]/g, '').trim();
+        aiReply = `Scanning real-time market feeds for "${cleanQuery}": NIFTY 50 is at 24,850.15 (+0.75%). 3 stocks in your watchlist match this query with positive momentum and active attention signals.`;
+        badge = 'MARKET INTELLIGENCE';
       }
 
       const aiMsg: Message = {
