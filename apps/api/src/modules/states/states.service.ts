@@ -34,6 +34,26 @@ export class StatesService {
       },
     });
   }
+
+  async markAllSeen(userId: string) {
+    const stocks = await prisma.stock.findMany();
+    const updates = stocks.map((stock) =>
+      prisma.userStockState.upsert({
+        where: { userId_stockId: { userId, stockId: stock.id } },
+        update: { lastSeenAt: new Date() },
+        create: {
+          userId,
+          stockId: stock.id,
+          lastSeenAt: new Date(),
+          lastSeenPrice: 1000,
+          lastSeenVolume: 1000000,
+        },
+      })
+    );
+    await prisma.$transaction(updates);
+    return { success: true, count: stocks.length };
+  }
 }
 
 export const statesService = new StatesService();
+

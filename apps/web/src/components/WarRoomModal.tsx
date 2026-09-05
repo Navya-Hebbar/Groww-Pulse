@@ -41,11 +41,18 @@ export function WarRoomModal({ isOpen, onClose }: WarRoomModalProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-lg animate-fadeIn">
       <div className="bg-surface-900 border border-cyan-500/40 rounded-2xl w-full max-w-5xl shadow-[0_0_60px_rgba(0,229,255,0.3)] overflow-hidden flex flex-col h-[750px] max-h-[95vh]">
-        {/* War Room Header */}
-        <div className="px-6 py-4 bg-gradient-to-r from-surface-950 via-cyan-950/60 to-surface-950 border-b border-cyan-500/30 flex items-center justify-between">
-          <div className="flex items-center gap-3">
+        {/* War Room Visual Header Banner */}
+        <div className="relative px-6 py-5 border-b border-cyan-500/30 flex items-center justify-between overflow-hidden bg-surface-950">
+          <img
+            src="/assets/war_room_hero.jpg"
+            alt="War Room Emergency Radar"
+            className="w-full h-full object-cover object-center opacity-35 absolute inset-0 pointer-events-none"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-surface-950 via-surface-950/80 to-transparent pointer-events-none" />
+
+          <div className="relative z-10 flex items-center gap-3.5">
             <div className="relative">
-              <div className="w-10 h-10 rounded-xl bg-cyan-500/20 border border-cyan-400/50 flex items-center justify-center text-cyan-300 shadow-[0_0_20px_rgba(0,229,255,0.4)]">
+              <div className="w-11 h-11 rounded-xl bg-cyan-500/20 border border-cyan-400/50 flex items-center justify-center text-cyan-300 shadow-[0_0_20px_rgba(0,229,255,0.4)] backdrop-blur-md">
                 <Radio className="w-6 h-6 animate-pulse" />
               </div>
               <span className="absolute -top-1 -right-1 flex h-3 w-3">
@@ -54,20 +61,20 @@ export function WarRoomModal({ isOpen, onClose }: WarRoomModalProps) {
               </span>
             </div>
             <div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2.5">
                 <h2 className="text-xl font-extrabold text-white tracking-wide uppercase">GROWW PULSE WAR ROOM</h2>
-                <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-500/20 text-red-400 border border-red-500/40 animate-pulse">
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-red-500/20 text-red-400 border border-red-500/40 animate-pulse tracking-wider">
                   HIGH FREQUENCY FEED
                 </span>
               </div>
-              <p className="text-xs text-gray-400">Institutional anomaly detection & macro shock simulator</p>
+              <p className="text-xs text-gray-300 mt-0.5">Institutional anomaly detection & macro shock simulator</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="relative z-10 flex items-center gap-3">
             <button
               onClick={onClose}
-              className="p-2 rounded-xl text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
+              className="p-2 rounded-xl text-gray-300 hover:text-white hover:bg-white/10 transition-colors backdrop-blur-md"
             >
               <X size={22} />
             </button>

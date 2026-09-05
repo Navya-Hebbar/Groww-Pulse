@@ -80,14 +80,22 @@ export function GoalsPage() {
 
   return (
     <div className="max-w-6xl mx-auto p-4 sm:p-6 space-y-6 animate-fade-in-up">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-surface-900/60 border border-white/10 p-6 rounded-3xl backdrop-blur-xl shadow-xl">
-        <div>
-          <span className="text-xs font-bold uppercase tracking-wider text-purple-400 flex items-center gap-1">
-            <Sparkles className="w-3.5 h-3.5" /> GOAL-LINKED PORTFOLIO TRACKER
+      {/* Visual Header Banner */}
+      <div className="relative overflow-hidden rounded-3xl border border-purple-500/30 shadow-[0_0_40px_rgba(168,85,247,0.2)] bg-surface-900 group">
+        <img
+          src="/assets/goals_hero.jpg"
+          alt="Financial Goals Banner"
+          className="w-full h-48 sm:h-56 object-cover object-center opacity-45 group-hover:scale-105 transition-transform duration-700 absolute inset-0"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-surface-950 via-surface-950/80 to-transparent" />
+        <div className="relative z-10 p-6 sm:p-8 flex flex-col justify-center space-y-2">
+          <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/20 border border-purple-500/40 text-purple-300 text-xs font-semibold backdrop-blur-md w-fit">
+            <Sparkles className="w-3.5 h-3.5" /> GOAL-LINKED RELEVANCE ENGINE
           </span>
-          <h1 className="text-3xl font-extrabold text-white tracking-tight mt-1">Financial Goals</h1>
-          <p className="text-sm text-gray-400">Link your stocks to financial milestones. Changes to goal-linked stocks boost attention scoring.</p>
+          <h1 className="text-3xl font-extrabold text-white tracking-tight">Financial Goals & Allocation</h1>
+          <p className="text-sm text-gray-300 max-w-xl">
+            Link your stocks to financial milestones. Stock movements attached to high-priority goals are automatically weighted higher in your attention feed.
+          </p>
         </div>
       </div>
 

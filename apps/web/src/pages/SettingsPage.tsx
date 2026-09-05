@@ -54,12 +54,24 @@ export function SettingsPage() {
 
   return (
     <div className="max-w-4xl mx-auto p-4 sm:p-6 space-y-6 animate-fade-in-up">
-      <div className="bg-surface-900/60 border border-white/10 p-6 rounded-3xl backdrop-blur-xl shadow-xl">
-        <span className="text-xs font-bold uppercase tracking-wider text-cyan-400 flex items-center gap-1">
-          <Sparkles className="w-3.5 h-3.5" /> PULSE SIGNAL RULES
-        </span>
-        <h1 className="text-3xl font-extrabold text-white tracking-tight mt-1">Pulse Engine Settings</h1>
-        <p className="text-sm text-gray-400">Tune statistical anomaly detection thresholds and active signal feeds.</p>
+      {/* Visual Header Banner */}
+      <div className="relative overflow-hidden rounded-3xl border border-cyan-500/30 shadow-[0_0_40px_rgba(0,229,255,0.15)] bg-surface-900 group">
+        <img
+          src="/assets/settings_hero.jpg"
+          alt="Signal Settings Banner"
+          className="w-full h-44 sm:h-52 object-cover object-center opacity-45 group-hover:scale-105 transition-transform duration-700 absolute inset-0"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-surface-950 via-surface-950/80 to-transparent" />
+        
+        <div className="relative z-10 p-6 sm:p-8 flex flex-col justify-center space-y-2">
+          <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 text-xs font-semibold backdrop-blur-md w-fit">
+            <Sparkles className="w-3.5 h-3.5" /> PULSE SIGNAL ENGINE RULES
+          </span>
+          <h1 className="text-3xl font-extrabold text-white tracking-tight">Signal Preferences & Thresholds</h1>
+          <p className="text-sm text-gray-300 max-w-xl">
+            Control which change signals influence your Attention Score algorithms and filter out noise.
+          </p>
+        </div>
       </div>
 
       <div className="bg-surface-900/60 border border-white/10 rounded-3xl p-6 backdrop-blur-xl shadow-xl space-y-6">

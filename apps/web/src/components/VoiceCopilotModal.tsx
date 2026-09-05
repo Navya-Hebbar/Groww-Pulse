@@ -61,6 +61,12 @@ export function VoiceCopilotModal({ isOpen, onClose }: VoiceCopilotProps) {
         recognitionRef.current = recognition;
       }
     }
+
+    return () => {
+      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+    };
   }, []);
 
   useEffect(() => {
@@ -152,9 +158,16 @@ export function VoiceCopilotModal({ isOpen, onClose }: VoiceCopilotProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-fadeIn">
       <div className="bg-surface-900 border border-cyan-500/30 rounded-2xl w-full max-w-xl shadow-[0_0_50px_rgba(0,229,255,0.25)] overflow-hidden flex flex-col h-[600px] max-h-[90vh]">
-        {/* Header */}
-        <div className="p-4 bg-gradient-to-r from-surface-850 via-cyan-950/40 to-surface-850 border-b border-cyan-500/20 flex items-center justify-between">
-          <div className="flex items-center gap-3">
+        {/* Visual Header Banner */}
+        <div className="relative p-5 border-b border-cyan-500/20 flex items-center justify-between overflow-hidden bg-surface-950">
+          <img
+            src="/assets/ai_copilot_hero.jpg"
+            alt="AI Copilot Banner"
+            className="w-full h-full object-cover object-center opacity-30 absolute inset-0 pointer-events-none"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-surface-950 via-surface-950/80 to-transparent" />
+
+          <div className="relative z-10 flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center text-cyan-300 shadow-[0_0_15px_rgba(0,229,255,0.3)]">
               <Bot className="w-6 h-6 animate-pulse" />
             </div>
@@ -165,11 +178,11 @@ export function VoiceCopilotModal({ isOpen, onClose }: VoiceCopilotProps) {
                   LIVE VOICE
                 </span>
               </div>
-              <p className="text-xs text-gray-400">Ask anything in plain English or Hindi</p>
+              <p className="text-xs text-gray-300">Ask anything about your portfolio or market signals</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="relative z-10 flex items-center gap-2">
             <button
               onClick={() => setIsSpeechEnabled(!isSpeechEnabled)}
               className={`p-2 rounded-xl border transition-all ${

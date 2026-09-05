@@ -6,6 +6,15 @@ export const statesRouter = Router();
 
 statesRouter.use(authenticate);
 
+statesRouter.post('/mark-all-seen', async (req: AuthRequest, res: Response, next: NextFunction) => {
+  try {
+    const result = await statesService.markAllSeen(req.userId!);
+    res.json({ success: true, data: result });
+  } catch (error) {
+    next(error);
+  }
+});
+
 statesRouter.post('/:stockId', async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
     const { currentPrice, currentVolume } = req.body;

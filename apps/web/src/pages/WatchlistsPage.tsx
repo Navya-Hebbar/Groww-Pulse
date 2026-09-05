@@ -83,33 +83,42 @@ export function WatchlistsPage() {
 
   return (
     <div className="max-w-6xl mx-auto p-4 sm:p-6 space-y-6 animate-fade-in-up">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-surface-900/60 border border-white/10 p-6 rounded-3xl backdrop-blur-xl shadow-xl">
-        <div>
-          <span className="text-xs font-bold uppercase tracking-wider text-cyan-400 flex items-center gap-1">
-            <Sparkles className="w-3.5 h-3.5" /> SMART WATCHLIST MANAGER
-          </span>
-          <h1 className="text-3xl font-extrabold text-white tracking-tight mt-1">My Watchlists</h1>
-          <p className="text-sm text-gray-400">Organize your portfolio signals across customized market buckets.</p>
-        </div>
+      <div className="relative overflow-hidden rounded-3xl border border-cyan-500/30 shadow-[0_0_40px_rgba(0,229,255,0.15)] bg-surface-900 group">
+        <img
+          src="/assets/watchlists_hero.jpg"
+          alt="Smart Watchlists Banner"
+          className="w-full h-44 sm:h-52 object-cover object-center opacity-40 group-hover:scale-105 transition-transform duration-700 absolute inset-0"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-surface-950 via-surface-950/80 to-transparent" />
 
-        <div className="flex gap-2 w-full sm:w-auto">
-          <input
-            type="text"
-            value={newWatchlistName}
-            onChange={(e) => setNewWatchlistName(e.target.value)}
-            placeholder="New watchlist name"
-            className="bg-surface-800/80 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-cyan-500 flex-1 sm:w-64 backdrop-blur-md"
-          />
-          <button
-            onClick={() => {
-              if (newWatchlistName.trim()) createMutation.mutate(newWatchlistName);
-            }}
-            disabled={!newWatchlistName.trim() || createMutation.isPending}
-            className="px-4 py-2.5 rounded-xl bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 hover:bg-cyan-500/30 font-semibold text-sm flex items-center gap-2 transition-all shadow-[0_0_15px_rgba(0,229,255,0.2)]"
-          >
-            <Plus size={16} />
-            Create
-          </button>
+        <div className="relative z-10 p-6 sm:p-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div className="space-y-1 max-w-xl">
+            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 text-xs font-semibold backdrop-blur-md">
+              <Sparkles className="w-3.5 h-3.5" /> SMART WATCHLIST MANAGER
+            </span>
+            <h1 className="text-3xl font-extrabold text-white tracking-tight">My Watchlists</h1>
+            <p className="text-sm text-gray-300">Organize your portfolio signals across customized market buckets with automated state persistence.</p>
+          </div>
+
+          <div className="flex gap-2 w-full sm:w-auto relative z-10">
+            <input
+              type="text"
+              value={newWatchlistName}
+              onChange={(e) => setNewWatchlistName(e.target.value)}
+              placeholder="New watchlist name"
+              className="bg-surface-800/80 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-cyan-500 flex-1 sm:w-64 backdrop-blur-md"
+            />
+            <button
+              onClick={() => {
+                if (newWatchlistName.trim()) createMutation.mutate(newWatchlistName);
+              }}
+              disabled={!newWatchlistName.trim() || createMutation.isPending}
+              className="px-4 py-2.5 rounded-xl bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 hover:bg-cyan-500/30 font-semibold text-sm flex items-center gap-2 transition-all shadow-[0_0_15px_rgba(0,229,255,0.2)]"
+            >
+              <Plus size={16} />
+              Create
+            </button>
+          </div>
         </div>
       </div>
 

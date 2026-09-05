@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { Activity, LayoutDashboard, List, Target, Settings, LogOut, Radio, Bot, Share2, Sparkles } from 'lucide-react';
@@ -103,6 +103,13 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const [isVoiceOpen, setIsVoiceOpen] = useState(false);
   const [isWarRoomOpen, setIsWarRoomOpen] = useState(false);
   const [isShareOpen, setIsShareOpen] = useState(false);
+
+  // Automatically close all modals whenever route changes
+  useEffect(() => {
+    setIsWarRoomOpen(false);
+    setIsVoiceOpen(false);
+    setIsShareOpen(false);
+  }, [location.pathname]);
 
   const navItems = [
     { path: '/', label: 'Pulse', icon: LayoutDashboard },
