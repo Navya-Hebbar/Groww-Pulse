@@ -120,7 +120,7 @@ export function ExplainabilityModal({ insight, isOpen, onClose }: Explainability
               {/* Factor 2: Volume Anomaly */}
               <div>
                 <div className="flex justify-between text-xs font-bold text-gray-200 mb-1">
-                  <span>Volume Z-Score Anomaly ($\sigma_{vol}$)</span>
+                  <span>Volume Z-Score Anomaly ($\sigma_{'vol'}$)</span>
                   <span className="text-emerald-300 font-mono">+{volumeContribution} pts</span>
                 </div>
                 <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
